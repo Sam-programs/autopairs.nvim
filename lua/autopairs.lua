@@ -1,7 +1,7 @@
 ---@diagnostic disable: deprecated
 --
 -- my first neovim plugin
--- it isn't really too custimizable 
+-- it isn't really too custimizable
 -- features request are welcome
 
 local M = {}
@@ -209,15 +209,14 @@ local function init()
       api.nvim_buf_set_lines(0, r, r + 1, false, { line });
       local cmd = api.nvim_replace_termcodes("<CMD>", true, false, true);
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true);
-      api.nvim_feedkeys(cmd .. 'normal ==f'.. close .. enter, 'n', false);
+      local right = api.nvim_replace_termcodes("<right>", true, false, true);
+      api.nvim_feedkeys(cmd .. 'normal ==f' .. open .. enter .. right, 'n', false);
    end
-
    for i, bracket in pairs(bracketList) do
       vim.keymap.set("i", bracket[OPENING], function()
          brackets(bracket[OPENING], bracket[CLOSING])
       end)
    end
-
    -- ' gets a speical function
    -- because i can't write can't properly without this function
    vim.keymap.set("i", "\'", function()
