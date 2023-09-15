@@ -139,6 +139,8 @@ local function init()
       ['8'] = true,
       ['9'] = true,
       ['_'] = true,
+      ['\"'] = true,
+      ['\''] = true,
    }
    local api = vim.api
    local OPENING = 1
