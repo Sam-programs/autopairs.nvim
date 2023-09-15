@@ -1,4 +1,4 @@
-# autopairs
+# autopairs.nvim
 a simple neovim autopair plugin 
 ## installation
 vim-plug
@@ -42,7 +42,7 @@ require("autopairs").setup({
 })
 ```
 ## features
-a lot of the features were inspired by jiangmiao/auto-pairs (accidentally)
+a lot of the features were inspired by jiangmiao/auto-pairs (accidentally)  
 Insert pair
 ```
 { -> {}
