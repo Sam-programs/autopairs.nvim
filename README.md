@@ -1,6 +1,6 @@
 # autopairs
 a simple neovim autopair plugin 
-# installation
+## installation
 vim-plug
 ```lua
   Plug 'Sam-Programs/autopairs.nvim'
@@ -9,7 +9,7 @@ packer
 ```lua
 use({"Sam-programs/autopairs.nvim"})
 ```
-# setup
+## setup
 ``` lua 
 require("autopairs.nvim").setup({})
 ```
@@ -35,7 +35,7 @@ require("autopairs.nvim").setup({
    },
 })
 ```
-# features
+## features
 a lot of the features were inspired by jiangmiao/auto-pairs (accidentally)
 Insert pair
 ```
