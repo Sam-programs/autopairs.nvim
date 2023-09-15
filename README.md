@@ -2,20 +2,26 @@
 a simple neovim autopair plugin 
 ## installation
 vim-plug
-```lua
+```vim
   Plug 'Sam-Programs/autopairs.nvim'
+  lua << EOF
+  require("autopairs").setup {}
+  EOF
 ```
 packer
 ```lua
-use({"Sam-programs/autopairs.nvim"})
+use {
+    "Sam-programs/autopairs.nvim",
+    config = function() require("autopairs").setup {} end
+}
 ```
 ## setup
 ``` lua 
-require("autopairs.nvim").setup({})
+require("autopairs").setup({})
 ```
 this is the default setup
 ```lua
-require("autopairs.nvim").setup({
+require("autopairs").setup({
    semiOutPair = {
       {
          ['{'] = true,
@@ -61,7 +67,6 @@ Insert new indented line after Return (only for {})
            |
        }
 ```
-
 Skip ' when inside a word
 
 Ignore auto pair when previous character is \
