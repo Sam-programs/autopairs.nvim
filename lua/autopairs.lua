@@ -216,7 +216,6 @@ local function init()
          end
          line = insertChar(line, cursorCol, close);
       end
-      local indentLevel = vim.fn.indent(cursorRow + 1)
       api.nvim_buf_set_lines(0,cursorRow,cursorRow + 1,false,{line})
       local right = api.nvim_replace_termcodes("<right>", true, false, true)
       api.nvim_feedkeys(right, 'n', false)

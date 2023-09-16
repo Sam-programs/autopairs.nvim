@@ -42,7 +42,8 @@ require("autopairs").setup({
 })
 ```
 ## features
-diagnostics in lualine and the mode won't change
+the killer feature for this plugin is it never leaves insert mode
+so diagnostics and mode in lualine  won't change
 Insert pair
 ```
 {;}-> {};
@@ -58,7 +59,7 @@ Semiclon out of pair
 ```
 Word wrap
 ```
--- |foo_    -> (foo_)
+-- |foo    -> (foo)
 -- |foo.bar -> (foo).bar
 ```
 Insert new indented line after Return (only for {})
@@ -70,5 +71,3 @@ Insert new indented line after Return (only for {})
 Skip ' when inside a word
 
 Ignore auto pair when previous character is \
-
-planning to add jump to next and previous pair soon™ 
