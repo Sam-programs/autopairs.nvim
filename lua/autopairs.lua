@@ -259,6 +259,9 @@ local function init()
       if spacesAtBeginning < indentLevel then
          line = strrepeat(" ", indentLevel - spacesAtBeginning) .. line
          cursorCol = indentLevel - spacesAtBeginning + cursorCol
+      else
+         line = strsub(line,2)
+         cursorCol = indentLevel - spacesAtBeginning + cursorCol
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol })
