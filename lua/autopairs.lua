@@ -155,14 +155,13 @@ local function init()
    local CLOSING = 2
    -- a hybird between lispindent and cindent
    -- uses 0 indexing
-   local function indent(n)
-      local lispindent = vim.fn.lispindent(n + 1)
+   local function indent(lnum)
+      local lispindent = vim.fn.lispindent(lnum + 1)
       if lispindent == 0 then
-         return vim.fn.cindent(n + 1)
+         return vim.fn.cindent(lnum + 1)
       end
       return lispindent
    end
-
    local function semicolon_handler()
       local r, c = unpack(api.nvim_win_get_cursor(0));
       r = r - 1
