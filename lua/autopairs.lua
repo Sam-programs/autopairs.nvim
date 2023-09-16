@@ -208,8 +208,7 @@ local function init()
       end
       api.nvim_buf_set_lines(0, r, r + 1, false, { line });
       local right = api.nvim_replace_termcodes("<right>", true, false, true);
-      vim.cmd('normal ==f' .. open)
-      api.nvim_feedkeys(right, 'n', false);
+      vim.cmd('normal ==f' .. close)
    end
    for i, bracket in pairs(bracketList) do
       vim.keymap.set("i", bracket[OPENING], function()
