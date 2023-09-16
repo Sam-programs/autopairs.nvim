@@ -157,9 +157,8 @@ local function init()
    -- uses 0 indexing
    local function indent(n)
       local lispindent = vim.fn.lispindent(n + 1)
-      local cindent = vim.fn.cindent(n + 1)
       if lispindent == 0 then
-         return cindent
+         return vim.fn.cindent(n + 1)
       end
       return lispindent
    end
@@ -332,7 +331,6 @@ M.setup = function(config)
    if config.semiOutPair then
       semiOutPair = config.semiOutPair
    end
-
    init()
 end
 return M
