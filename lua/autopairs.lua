@@ -199,7 +199,7 @@ local function init()
    vim.keymap.set("n", ";", function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1
-      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)
+      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
       local current = stri(line, cursorCol)
       local next = stri(line, cursorCol + 1)
       if next == ';' then
