@@ -260,7 +260,7 @@ local function init()
          line = strrepeat(" ",indentLevel - spacesAtBeginning) .. line
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
-      api.nvim_win_set_cursor(0,{cursorRow + 1,#line - 2})
+      api.nvim_win_set_cursor(0,{cursorRow + 1,#line - 1})
    end
    for i, bracket in pairs(bracketList) do
       vim.keymap.set("i", bracket[OPENING], function()
