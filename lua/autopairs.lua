@@ -159,11 +159,11 @@ local function init()
       local lispindent = vim.fn.lispindent(n + 1)
       local cindent = vim.fn.cindent(n + 1)
       if lispindent == 0 then
-        return cindent 
+         return cindent
       end
       return lispindent
    end
-    
+
    local function semicolon_handler()
       local r, c = unpack(api.nvim_win_get_cursor(0));
       r = r - 1
@@ -219,7 +219,7 @@ local function init()
       if semiOutPair[CLOSING][current] ~= nil then
          line = insertChar(line, cursorCol + 2, ';');
       end
-      api.nvim_buf_set_lines(0,cursorRow,cursorRow + 1,false,{line})
+      api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
 
    local function brackets(open, close)
@@ -248,9 +248,19 @@ local function init()
          end
          line = insertChar(line, cursorCol, close);
       end
+      local indentLevel = indent(cursorRow + 1)
+      local spacesAtBeginning = 0
+      while spacesAtBeginning < indentLevel do
+        if stri(line,spacesAtBeginning) ~= ' 'then
+          break; 
+        end
+        spacesAtBeginning = spacesAtBeginning + 1 
+      end
+      if spacesAtBeginning < indentLevel then
+         line = strrepeat(" ",indentLevel - spacesAtBeginning) .. line
+      end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
-      local right = api.nvim_replace_termcodes("<right>", true, false, true)
-      api.nvim_feedkeys(right, 'n', false)
+      api.nvim_win_set_cursor(0,{cursorRow + 1,#line - 2})
    end
    for i, bracket in pairs(bracketList) do
       vim.keymap.set("i", bracket[OPENING], function()
@@ -271,7 +281,6 @@ local function init()
       end
       return "\'\'<left>"
    end, { expr = true, noremap = true })
-
    vim.keymap.set("i", "<BS>", function()
       local r, c = unpack(api.nvim_win_get_cursor(0));
       r = r - 1;
