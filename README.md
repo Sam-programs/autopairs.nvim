@@ -42,10 +42,10 @@ require("autopairs").setup({
 })
 ```
 ## features
-a lot of the features were inspired by jiangmiao/auto-pairs (accidentally)  
+diagnostics in lualine and the mode won't change
 Insert pair
 ```
-{ -> {}
+{;}-> {};
 ```
 Delete pair
 ```

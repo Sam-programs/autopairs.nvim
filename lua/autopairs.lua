@@ -46,6 +46,16 @@ local function strcontains(str, c)
    return count
 end
 
+local function strrepeat(str, n)
+   local i = 0
+   local result = '';
+   while i < n do
+      result = result .. str
+      i = i + 1
+   end
+   return result
+end
+
 local bracketList = {
    { '{',  '}' },
    { '(',  ')' },
@@ -181,16 +191,16 @@ local function init()
    end, { expr = true, noremap = true })
 
    local function brackets(open, close)
-      local r, c = unpack(api.nvim_win_get_cursor(0));
-      r = r - 1;
-      local line = api.nvim_buf_get_lines(0, r, r + 1, false)[1];
-      local next = stri(line, c);
-      local prev = stri(line, c - 1);
-      local dataBeforeCursor = strsub(line, 0, c - 1);
-      local dataAfterCursor = strsub(line, c);
+      local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
+      cursorRow = cursorRow - 1;
+      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
+      local next = stri(line, cursorCol);
+      local prev = stri(line, cursorCol - 1);
+      local dataBeforeCursor = strsub(line, 0, cursorCol - 1);
+      local dataAfterCursor = strsub(line, cursorCol);
       local openBracketsBeforeCursor = strcontains(dataBeforeCursor, open) - strcontains(dataBeforeCursor, close);
       local closedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
-      line = insertChar(line, c - 1, open);
+      line = insertChar(line, cursorCol - 1, open);
       --this might not be the best way to check if there are missing end brackets
       --but its good enough
       if closedBracketsAfterCursor <= openBracketsBeforeCursor and
@@ -199,15 +209,16 @@ local function init()
          -- word wrapping
          if letters[next] then
             while letters[next] do
-               c = c + 1;
-               next = stri(line, c);
+               cursorCol = cursorCol + 1;
+               next = stri(line, cursorCol);
             end
-            c = c - 1
+            cursorCol = cursorCol - 1
          end
-         line = insertChar(line, c, close);
+         line = insertChar(line, cursorCol, close);
       end
-      api.nvim_buf_set_lines(0, r, r + 1, false, { line });
-      vim.cmd('normal!==f' .. close)
+      local indentLevel = vim.fn.indent(cursorRow + 1)
+      local right = api.nvim_replace_termcodes("<right>", true, false, true)
+      api.nvim_feedkeys(right, 'n', false)
    end
    for i, bracket in pairs(bracketList) do
       vim.keymap.set("i", bracket[OPENING], function()
@@ -249,16 +260,29 @@ local function init()
    --this took hours of trying to perfect it all thanks to feedkeys
    vim.keymap.set("i", "<CR>", function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
-      local line = api.nvim_buf_get_lines(0, cursorRow - 1, cursorRow, false)[1]
+      cursorRow = cursorRow - 1
+      local buf = api.nvim_buf_get_lines(0, 0, -1, false)
+      local line = buf[cursorRow + 1]
       local prev = stri(line, cursorCol - 1)
-      if prev == '{' then
-         --had a weird indentation thats why ==
-         return '<CR><CMD>normal!==k$<CR><right><CR>';
-         -- {|<CR>
-         -- }
+      local cur = stri(line, cursorCol)
+      if prev == '{' and cur == '}' then
+         local dataBeforeCursor = strsub(line, 0, cursorCol - 1)
+         api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { dataBeforeCursor })
+
+         local dataAfterCursor = strsub(line, cursorCol, #line)
+         api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 1, false, { dataAfterCursor })
+
+         local indentLevel = vim.fn.indent(cursorRow + 1)
+         dataAfterCursor = strrepeat(" ", indentLevel) .. dataAfterCursor
+         api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
       end
-      return '<CR>'
-   end, { expr = true, noremap = true })
+      -- i have no clue why i need to move the cursor back and forwards to make the indetation update for enter
+      local right = api.nvim_replace_termcodes("<right>", true, false, true)
+      local left = api.nvim_replace_termcodes("<left>", true, false, true)
+      api.nvim_feedkeys(left .. right, "t", false)
+      local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
+      api.nvim_feedkeys(enter, "n", false)
+   end);
 end
 
 M.setup = function(config)
