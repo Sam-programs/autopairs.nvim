@@ -46,7 +46,7 @@ the killer feature for this plugin is it never leaves insert mode
 so diagnostics and mode in lualine  won't change
 Insert pair
 ```
-{;}-> {};
+{}-> {}
 ```
 Delete pair
 ```
