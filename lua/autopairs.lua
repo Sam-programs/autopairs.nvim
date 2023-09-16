@@ -163,7 +163,7 @@ local function init()
       end
       return lispindent
    end
-
+    
    local function semicolon_handler()
       local r, c = unpack(api.nvim_win_get_cursor(0));
       r = r - 1
@@ -233,6 +233,9 @@ local function init()
       local openBracketsBeforeCursor = strcontains(dataBeforeCursor, open) - strcontains(dataBeforeCursor, close);
       local closedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
       line = insertChar(line, cursorCol - 1, open);
+      {}
+}
+
       --this might not be the best way to check if there are missing end brackets
       --but its good enough
       if closedBracketsAfterCursor <= openBracketsBeforeCursor and
@@ -303,7 +306,7 @@ local function init()
          local dataAfterCursor = strsub(line, cursorCol, #line)
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 1, false, { dataAfterCursor })
 
-         local indentLevel = indent(cursorRow)
+         local indentLevel = indent(cursorRow + 1)
          dataAfterCursor = strrepeat(" ", indentLevel) .. dataAfterCursor
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
       end
