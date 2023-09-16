@@ -18,7 +18,6 @@ M.state = {
 local function stri(str, i)
    return str:sub(i + 1, i + 1)
 end
-
 -- str:sub but with 0 indexing
 local function strsub(str, b, e)
    if e then
@@ -154,6 +153,16 @@ local function init()
    local api = vim.api
    local OPENING = 1
    local CLOSING = 2
+   -- a hybird between lispindent and cindent
+   -- uses 0 indexing
+   local function indent(n)
+      local lispindent = vim.fn.lispindent(n + 1)
+      local cindent = vim.fun.cindent(n + 1)
+      if lispindent == 0 then
+        return cindent 
+      end
+      return lispindent
+   end
 
    local function semicolon_handler()
       local r, c = unpack(api.nvim_win_get_cursor(0));
@@ -294,7 +303,7 @@ local function init()
          local dataAfterCursor = strsub(line, cursorCol, #line)
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 1, false, { dataAfterCursor })
 
-         local indentLevel = vim.fn.indent(cursorRow + 1)
+         local indentLevel = indent(cursorRow)
          dataAfterCursor = strrepeat(" ", indentLevel) .. dataAfterCursor
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
       end
