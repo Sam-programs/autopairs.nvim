@@ -211,6 +211,7 @@ local function init()
       if semiOutPair[CLOSING][current] ~= nil then
          line = insertChar(line, cursorCol + 2, ';');
       end
+      api.nvim_buf_set_lines(0,cursorRow,cursorRow + 1,false,{line})
    end)
 
    local function brackets(open, close)
