@@ -248,19 +248,19 @@ local function init()
          end
          line = insertChar(line, cursorCol, close);
       end
-      local indentLevel = indent(cursorRow + 1)
+      local indentLevel = indent(cursorRow)
       local spacesAtBeginning = 0
       while spacesAtBeginning < indentLevel do
-        if stri(line,spacesAtBeginning) ~= ' 'then
-          break; 
-        end
-        spacesAtBeginning = spacesAtBeginning + 1 
+         if stri(line, spacesAtBeginning) ~= ' ' then
+            break;
+         end
+         spacesAtBeginning = spacesAtBeginning + 1
       end
       if spacesAtBeginning < indentLevel then
-         line = strrepeat(" ",indentLevel - spacesAtBeginning) .. line
+         line = strrepeat(" ", indentLevel - spacesAtBeginning) .. line
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
-      api.nvim_win_set_cursor(0,{cursorRow + 1,#line - 1})
+      api.nvim_win_set_cursor(0, { cursorRow + 1, #line - 1 })
    end
    for i, bracket in pairs(bracketList) do
       vim.keymap.set("i", bracket[OPENING], function()
@@ -332,6 +332,7 @@ M.setup = function(config)
    if config.semiOutPair then
       semiOutPair = config.semiOutPair
    end
+
    init()
 end
 return M
