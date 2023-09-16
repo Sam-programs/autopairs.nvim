@@ -207,7 +207,7 @@ local function init()
          line = insertChar(line, c, close);
       end
       api.nvim_buf_set_lines(0, r, r + 1, false, { line });
-      vim.cmd('normal ==f' .. close)
+      vim.cmd('normal! ==f' .. close)
    end
    for i, bracket in pairs(bracketList) do
       vim.keymap.set("i", bracket[OPENING], function()
@@ -253,7 +253,7 @@ local function init()
       local prev = stri(line, cursorCol - 1)
       if prev == '{' then
          --had a weird indentation thats why ==
-         return '<CR><CMD>normal ==k$<CR><right><CR>';
+         return '<CR><CMD>normal! ==k$<CR><right><CR>';
          -- {|<CR>
          -- }
       end
