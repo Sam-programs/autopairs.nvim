@@ -157,7 +157,7 @@ local function init()
    -- uses 0 indexing
    local function indent(n)
       local lispindent = vim.fn.lispindent(n + 1)
-      local cindent = vim.fun.cindent(n + 1)
+      local cindent = vim.fn.cindent(n + 1)
       if lispindent == 0 then
         return cindent 
       end
