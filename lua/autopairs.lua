@@ -250,7 +250,7 @@ local function init()
       end
       local indentLevel = indent(cursorRow)
       local spacesAtBeginning = 0
-      while spacesAtBeginning < indentLevel do
+      while spacesAtBeginning < #line do
          if stri(line, spacesAtBeginning) ~= ' ' then
             break;
          end
@@ -261,7 +261,7 @@ local function init()
          cursorCol = indentLevel - spacesAtBeginning + cursorCol
       else
          if spacesAtBeginning > indentLevel then
-            line = strsub(line, 2)
+            line = strsub(line,spacesAtBeginning - indentLevel)
             cursorCol = indentLevel - spacesAtBeginning + cursorCol
          end
       end
