@@ -233,9 +233,6 @@ local function init()
       local openBracketsBeforeCursor = strcontains(dataBeforeCursor, open) - strcontains(dataBeforeCursor, close);
       local closedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
       line = insertChar(line, cursorCol - 1, open);
-      {}
-}
-
       --this might not be the best way to check if there are missing end brackets
       --but its good enough
       if closedBracketsAfterCursor <= openBracketsBeforeCursor and
