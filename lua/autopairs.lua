@@ -224,6 +224,7 @@ local function init()
    local function brackets(open, close)
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
+      local origncalCursorCol = cursorCol
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
       local next = stri(line, cursorCol);
       local prev = stri(line, cursorCol - 1);
@@ -246,6 +247,7 @@ local function init()
             cursorCol = cursorCol - 1
          end
          line = insertChar(line, cursorCol, close);
+         cursorCol = origncalCursorCol + 1
       end
       local indentLevel = indent(cursorRow)
       local spacesAtBeginning = 0
@@ -257,9 +259,10 @@ local function init()
       end
       if spacesAtBeginning < indentLevel then
          line = strrepeat(" ", indentLevel - spacesAtBeginning) .. line
+         cursorCol = indentLevel - spacesAtBeginning + cursorCol
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
-      api.nvim_win_set_cursor(0, { cursorRow + 1, #line - 1 })
+      api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol })
    end
    for i, bracket in pairs(bracketList) do
       vim.keymap.set("i", bracket[OPENING], function()
