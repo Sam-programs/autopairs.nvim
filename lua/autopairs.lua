@@ -11,7 +11,6 @@ M.state = {
    rules = {},
    buf_ts = {},
 }
-
 -- string utils
 
 -- get an element by index in a string
@@ -285,7 +284,7 @@ local function init()
    vim.keymap.set("i", "<CR>", function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1
-      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)
+      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
       local prev = stri(line, cursorCol - 1)
       local cur = stri(line, cursorCol)
       if prev == '{' and cur == '}' then
