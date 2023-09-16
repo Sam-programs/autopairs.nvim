@@ -179,16 +179,39 @@ local function init()
    end
 
    vim.keymap.set("i", ";", function()
-      return semicolon_handler();
+      local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
+      cursorRow = cursorRow - 1
+      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)
+      local current = stri(line, cursorCol)
+      local next = stri(line, cursorCol + 1)
+      if next == ';' then
+         return ''
+      end
+      if semiOutPair[OPENING][current] ~= nil then
+         return '<right><right>;<left><left>'
+      end
+      if semiOutPair[CLOSING][current] ~= nil then
+         return '<right>;<left><left>'
+      end
+      return ';'
    end, { expr = true, noremap = true })
 
    vim.keymap.set("n", ";", function()
-      local ret = semicolon_handler();
-      if ret == ';' then
-         return ';'
+      local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
+      cursorRow = cursorRow - 1
+      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)
+      local current = stri(line, cursorCol)
+      local next = stri(line, cursorCol + 1)
+      if next == ';' then
+         return
       end
-      return 'i' .. ret .. '<ESC>'
-   end, { expr = true, noremap = true })
+      if semiOutPair[OPENING][current] ~= nil then
+         line = insertChar(line, cursorCol + 2, ';');
+      end
+      if semiOutPair[CLOSING][current] ~= nil then
+         line = insertChar(line, cursorCol + 2, ';');
+      end
+   end)
 
    local function brackets(open, close)
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
@@ -216,7 +239,7 @@ local function init()
          end
          line = insertChar(line, cursorCol, close);
       end
-      api.nvim_buf_set_lines(0,cursorRow,cursorRow + 1,false,{line})
+      api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       local right = api.nvim_replace_termcodes("<right>", true, false, true)
       api.nvim_feedkeys(right, 'n', false)
    end
@@ -261,8 +284,7 @@ local function init()
    vim.keymap.set("i", "<CR>", function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1
-      local buf = api.nvim_buf_get_lines(0, 0, -1, false)
-      local line = buf[cursorRow + 1]
+      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)
       local prev = stri(line, cursorCol - 1)
       local cur = stri(line, cursorCol)
       if prev == '{' and cur == '}' then
