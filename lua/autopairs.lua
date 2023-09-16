@@ -260,13 +260,15 @@ local function init()
          line = strrepeat(" ", indentLevel - spacesAtBeginning) .. line
          cursorCol = indentLevel - spacesAtBeginning + cursorCol
       else
-         line = strsub(line,2)
-         cursorCol = indentLevel - spacesAtBeginning + cursorCol
+         if spacesAtBeginning > indentLevel then
+            line = strsub(line, 2)
+            cursorCol = indentLevel - spacesAtBeginning + cursorCol
+         end
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol })
    end
-   for i, bracket in pairs(bracketList) do
+   for _, bracket in pairs(bracketList) do
       vim.keymap.set("i", bracket[OPENING], function()
          brackets(bracket[OPENING], bracket[CLOSING])
       end)
@@ -291,7 +293,7 @@ local function init()
       local line = api.nvim_buf_get_lines(0, r, r + 1, false)[1];
       local prev = stri(line, c - 1)
       local next = stri(line, c)
-      for i, bracket in pairs(bracketList) do
+      for _, bracket in pairs(bracketList) do
          if prev == bracket[OPENING] then
             if next == bracket[CLOSING] then
                return '<right><BS><BS>';
