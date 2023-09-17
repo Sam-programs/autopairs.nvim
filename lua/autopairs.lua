@@ -4,7 +4,7 @@
 -- it isn't really too custimizable
 -- features request are welcome
 
-local M = {}
+local M = {};
 
 M.state = {
    disabled = false,
@@ -302,7 +302,11 @@ local function init()
       line = rmChar(line, distance)
       distance = distance - 1
       distance = distance - distanceToEndOfPrevWord(distance, line) 
-      line = insertChar(line, distance, closing)
+      if distance >= cursorCol then
+         line = insertChar(line, distance, closing)
+      else 
+         line = insertChar(line,cursorCol, closing)
+      end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
    -- ' gets a speical function
