@@ -78,14 +78,6 @@ local semiOutPair = {
 
 --plugin code
 
--- hybird between lisp indent and c indent
-local function hyindent(lnum)
-   local lispindent = vim.fn.lispindent(lnum + 1)
-   if lispindent == 0 then
-      return vim.fn.cindent(lnum + 1)
-   end
-   return lispindent
-end
 
 local function init()
    --i could use a string contains
@@ -163,28 +155,14 @@ local function init()
    local api = vim.api
    local OPENING = 1
    local CLOSING = 2
-   local function semicolon_handler()
-      local r, c = unpack(api.nvim_win_get_cursor(0));
-      r = r - 1
-      local line = api.nvim_buf_get_lines(0, r, r + 1, false)[1];
-      local current = stri(line, c)
-      local next = stri(line, c + 1)
-      local afterNext = stri(line, c + 2)
-      if next == ';' then
-         return ''
+   -- hybird between lisp indent and c indent
+   local function hyindent(lnum)
+      local lispindent = vim.fn.lispindent(lnum + 1)
+      if lispindent == 0 then
+         return vim.fn.cindent(lnum + 1)
       end
-      if afterNext == ';' then
-         return ''
-      end
-      if semiOutPair[OPENING][current] ~= nil then
-         return '<right><right>;<left><left>'
-      end
-      if semiOutPair[CLOSING][current] ~= nil then
-         return '<right>;<left><left>'
-      end
-      return ';'
+      return lispindent
    end
-
    vim.keymap.set("i", ";", function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1
@@ -219,7 +197,17 @@ local function init()
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
-
+   local function distanceToNextWord(i, line)
+      local distance = 0
+      while distance < #line - i do
+         if letters[stri(line[i + distance])] == nil then
+             distance = distance - 1
+             break;
+         end
+         distance = distance + 1
+      end
+      return distance
+   end
    local function brackets(open, close)
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
@@ -229,8 +217,7 @@ local function init()
       local prev = stri(line, cursorCol - 1);
       local dataBeforeCursor = strsub(line, 0, cursorCol - 1);
       local dataAfterCursor = strsub(line, cursorCol);
-      local OpenBracketsBeforeCursor = strcontains(dataBeforeCursor, open)
-      local filteredOpenBracketsBeforeCursor = OpenBracketsBeforeCursor - strcontains(dataBeforeCursor, close);
+      local filteredOpenBracketsBeforeCursor = strcontains(dataBeforeCursor, open) - strcontains(dataBeforeCursor, close);
       local filteredClosedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
       line = insertChar(line, cursorCol - 1, open);
       --this might not be the best way to check if there are missing end brackets
@@ -239,14 +226,7 @@ local function init()
           prev ~= '\\'
       then
          -- word wrapping
-         if letters[next] then
-            while letters[next] do
-               cursorCol = cursorCol + 1;
-               next = stri(line, cursorCol);
-            end
-            cursorCol = cursorCol - 1
-         end
-         line = insertChar(line, cursorCol, close);
+         line = insertChar(line,distanceToNextWord(cursorCol + 1,line), close);
          cursorCol = origncalCursorCol + 1
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
