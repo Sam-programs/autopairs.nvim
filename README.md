@@ -68,21 +68,6 @@ Insert new indented line after Return (only for {})
            |
        }
 ```
-Pair formatting (all pairs)
-```
-...
-    if .. then 
-|
-    end
-...
-input:{
-...
-    if .. then 
-    (|)
-    end
-...
-
-```
 Skip ' when inside a word
 
 Ignore auto pair when previous character is \

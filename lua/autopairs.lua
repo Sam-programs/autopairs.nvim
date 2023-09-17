@@ -77,6 +77,27 @@ local semiOutPair = {
 }
 
 --plugin code
+local function hyindent(lnum)
+   local lispindent = vim.fn.lispindent(lnum + 1)
+   local cindent = vim.fn.cindent(lnum + 1)
+   local indent = vim.fn.indent(lnum + 1)
+   local chosen = indent
+   if lispindent > chosen then
+      chosen = lispindent 
+   end
+   if cindent > chosen then
+      chosen = cindent 
+   end
+   return chosen
+end
+-- returns the a formatted version of lnum
+local format = function(line,lnum)
+   local indentLevel = hyindent(lnum)
+   local spacesAtBeginning = 0;
+   while spacesAtBeginning < #line do
+   end
+end
+
 local function init()
    --i could use a string contains
    --but this is cooler
@@ -153,15 +174,8 @@ local function init()
    local api = vim.api
    local OPENING = 1
    local CLOSING = 2
-   -- a hybird between lispindent and cindent
+   -- a hybird between lispindent ,cindent and indent
    -- uses 0 indexing
-   local function indent(lnum)
-      local lispindent = vim.fn.lispindent(lnum + 1)
-      if lispindent == 0 then
-         return vim.fn.cindent(lnum + 1)
-      end
-      return lispindent
-   end
    local function semicolon_handler()
       local r, c = unpack(api.nvim_win_get_cursor(0));
       r = r - 1
@@ -201,7 +215,6 @@ local function init()
       end
       return ';'
    end, { expr = true, noremap = true })
-
    vim.keymap.set("n", ";", function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1
@@ -229,12 +242,13 @@ local function init()
       local prev = stri(line, cursorCol - 1);
       local dataBeforeCursor = strsub(line, 0, cursorCol - 1);
       local dataAfterCursor = strsub(line, cursorCol);
-      local openBracketsBeforeCursor = strcontains(dataBeforeCursor, open) - strcontains(dataBeforeCursor, close);
-      local closedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
+      local OpenBracketsBeforeCursor = strcontains(dataBeforeCursor, open)
+      local filteredOpenBracketsBeforeCursor = OpenBracketsBeforeCursor - strcontains(dataBeforeCursor, close);
+      local filteredClosedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
       line = insertChar(line, cursorCol - 1, open);
       --this might not be the best way to check if there are missing end brackets
       --but its good enough
-      if closedBracketsAfterCursor <= openBracketsBeforeCursor and
+      if filteredClosedBracketsAfterCursor <= filteredOpenBracketsBeforeCursor and
           prev ~= '\\'
       then
          -- word wrapping
@@ -248,7 +262,11 @@ local function init()
          line = insertChar(line, cursorCol, close);
          cursorCol = origncalCursorCol + 1
       end
-      local indentLevel = indent(cursorRow)
+      local indentLevel = hyindent(cursorRow)
+      --this is not good code but
+      --REFACTORME
+      --i didn't make it into it's own function because i want to allow custom formatting functions
+      --but i need the cursor offset (yea am lazy)
       local spacesAtBeginning = 0
       while spacesAtBeginning < #line do
          if stri(line, spacesAtBeginning) ~= ' ' then
@@ -261,7 +279,7 @@ local function init()
          cursorCol = indentLevel - spacesAtBeginning + cursorCol
       else
          if spacesAtBeginning > indentLevel then
-            line = strsub(line,spacesAtBeginning - indentLevel)
+            line = strsub(line, spacesAtBeginning - indentLevel)
             cursorCol = indentLevel - spacesAtBeginning + cursorCol
          end
       end
@@ -318,7 +336,7 @@ local function init()
          local dataAfterCursor = strsub(line, cursorCol, #line)
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 1, false, { dataAfterCursor })
 
-         local indentLevel = indent(cursorRow + 1)
+         local indentLevel = hyindent(cursorRow + 1)
          dataAfterCursor = strrepeat(" ", indentLevel) .. dataAfterCursor
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
       end
