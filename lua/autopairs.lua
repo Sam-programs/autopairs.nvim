@@ -305,7 +305,7 @@ local function init()
       if distance >= cursorCol then
          line = insertChar(line, distance, closing)
       else 
-         line = insertChar(line,cursorCol, closing)
+         line = insertChar(line,cursorCol - 1, closing)
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
