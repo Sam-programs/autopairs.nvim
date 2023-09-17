@@ -52,7 +52,7 @@ Delete pair
 ```
 {|} -> |
 ```
-Semiclon out of pair
+Semicolon out of pair
 ```
 {;} -> {};
 (;) -> ();
