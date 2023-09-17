@@ -2,7 +2,7 @@
 --
 -- my first neovim plugin
 -- it isn't really too custimizable
--- 
+--
 
 -- i am done with this projects base
 -- what i learnt while making this project is 2 things
@@ -161,9 +161,6 @@ local function init()
       ['7'] = true,
       ['8'] = true,
       ['9'] = true,
-      ['_'] = true,
-      ['\"'] = true,
-      ['\''] = true,
    }
    local api = vim.api
    local OPENING = 1
@@ -251,7 +248,7 @@ local function init()
       local prev = stri(line, cursorCol - 1);
       local dataBeforeCursor = strsub(line, 0, cursorCol - 1);
       local dataAfterCursor = strsub(line, cursorCol);
-      local filteredOpenBracketsBeforeCursor = strcontains(dataBeforeCursor, open) - strcontains(dataBeforeCursor, close);
+      local filteredOpenBracketsBeforeCursor  = strcontains(dataBeforeCursor, open) - strcontains(dataBeforeCursor, close);
       local filteredClosedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
       line = insertChar(line, cursorCol - 1, open);
       --this might not be the best way to check if there are missing end brackets
@@ -267,12 +264,15 @@ local function init()
       api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol + 1 })
    end
    for _, bracket in pairs(bracketList) do
-      vim.keymap.set({"i","c"}, bracket[OPENING], function()
+      vim.keymap.set("i", bracket[OPENING], function()
          brackets(bracket[OPENING], bracket[CLOSING])
+      end)
+      vim.keymap.set("c", bracket[OPENING], function()
+         return bracket[OPENING] .. bracket[CLOSING] .. '<right>'
       end)
    end
 
-   vim.keymap.set("i",wrapForwardKey, function()
+   vim.keymap.set("i", wrapForwardKey, function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
@@ -293,7 +293,7 @@ local function init()
       line = insertChar(line, distance, closing)
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
-   vim.keymap.set("i",wrapBackwradKey, function()
+   vim.keymap.set("i", wrapBackwradKey, function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
@@ -321,7 +321,7 @@ local function init()
    end)
    -- ' gets a speical function
    -- because i can't write can't properly without this function
-   vim.keymap.set({"i","c"}, "\'", function()
+   vim.keymap.set("i", "\'", function()
       local r, c = unpack(api.nvim_win_get_cursor(0));
       r = r - 1;
       local line = api.nvim_buf_get_lines(0, r, r + 1, false)[1];
@@ -329,10 +329,11 @@ local function init()
       if letters[prev] or
           prev == '\\'
       then
-         return "\'"
+         return '\'';
       end
-      return "\'\'<left>"
+      brackets('\'','\'');
    end, { expr = true, noremap = true })
+
    vim.keymap.set("i", "<BS>", function()
       local r, c = unpack(api.nvim_win_get_cursor(0));
       r = r - 1;
