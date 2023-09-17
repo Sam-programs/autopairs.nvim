@@ -71,5 +71,3 @@ Insert new indented line after Return (only for {})
 Skip ' when inside a word
 
 Ignore auto pair when previous character is \
-
-pairs larger than 1 character and pair for file type options are planned and hopefully coming soon™

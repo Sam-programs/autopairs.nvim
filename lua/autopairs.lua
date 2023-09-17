@@ -30,6 +30,9 @@ end
 local function insertChar(str, i, c)
    return str:sub(1, i + 1) .. c .. str:sub(i + 2, #str)
 end
+local function rmChar(str, i)
+   return str:sub(1, i)  .. str:sub(i + 2, #str)
+end
 -- returns the number of occurences of c in str
 -- c is a character
 local function strcontains(str, c)
@@ -198,9 +201,20 @@ local function init()
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
    local function distanceToNextWord(i, line)
-      local distance = 0
+      local distance = 1
       while distance < #line - i do
          if letters[stri(line, i + distance)] == nil then
+            distance = distance - 1
+            break;
+         end
+         distance = distance + 1
+      end
+      return distance
+   end
+   local function distanceToNextChar(i, line, c)
+      local distance = 1
+      while distance < #line - i do
+         if stri(line, i + distance) == c then
             distance = distance - 1
             break;
          end
@@ -224,7 +238,11 @@ local function init()
           prev ~= '\\'
       then
          -- word wrapping
-         line = insertChar(line, cursorCol + distanceToNextWord(cursorCol + 1, line), close);
+         local distance = distanceToNextWord(cursorCol, line)
+         if distance == 0 then
+            distance = distance + 1
+         end
+         line = insertChar(line, cursorCol + distance, close);
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol + 1 })
@@ -239,7 +257,23 @@ local function init()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
-      local distance = distanceToNextWord(cursorRow, line)
+      local prev = stri(line, cursorCol)
+      local closing = ''
+      for _, bracket in pairs(bracketList) do
+         if prev == bracket[OPENING] then
+            closing = bracket[CLOSING]
+            break;
+         end
+      end
+      if closing == '' then
+         return
+      end
+      local distance = cursorRow + distanceToNextChar(cursorRow, line,closing)
+      line = rmChar(line,distance)
+      distance = distance - 1
+      distance = distance + distanceToNextWord(distance, line)
+      line = insertChar(line,distance,closing)
+      api.nvim_buf_set_lines(0,cursorRow,cursorRow + 1,false,{})
    end)
    -- ' gets a speical function
    -- because i can't write can't properly without this function
