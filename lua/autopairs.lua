@@ -13,11 +13,6 @@ M.state = {
 }
 -- string utils
 
--- get an element by index in a string
--- 0 indexing
-local function stri(str, i)
-   return str:sub(i + 1, i + 1)
-end
 -- str:sub but with 0 indexing
 local function strsub(str, b, e)
    if e then
@@ -25,13 +20,18 @@ local function strsub(str, b, e)
    end
    return str:sub(b + 1)
 end
+-- get an element by index in a string
+-- 0 indexing
+local function stri(str, i)
+   return strsub(str,i,i)
+end
 -- insert an element to a string
 -- 0 indexing
 local function insertChar(str, i, c)
-   return str:sub(1, i + 1) .. c .. str:sub(i + 2, #str)
+   return strsub(1,i) .. c .. str:sub(i + 1, #str)
 end
 local function rmChar(str, i)
-   return str:sub(1, i)  .. str:sub(i + 2, #str)
+   return str:sub(1, i - 1)  .. str:sub(i + 1, #str)
 end
 -- returns the number of occurences of c in str
 -- c is a character
@@ -270,7 +270,7 @@ local function init()
       end
       local distance = cursorRow + distanceToNextChar(cursorRow, line,closing)
       line = rmChar(line,distance)
-      api.nvim_buf_set_lines(0,cursorRow,cursorRow + 1,false,{})
+      api.nvim_buf_set_lines(0,cursorRow,cursorRow + 1,false,{line})
    end)
    -- ' gets a speical function
    -- because i can't write can't properly without this function
