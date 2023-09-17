@@ -2,7 +2,15 @@
 --
 -- my first neovim plugin
 -- it isn't really too custimizable
--- features request are welcome
+-- 
+
+-- i am done with this projects base
+-- what i learnt while making this project is 2 things
+-- 1. don't do math and logic without pen and paper
+-- 2. making a project open source results in me being pressured (by my self) to finish it
+-- and make something actually useful
+-- by pressuring myself i actually made an autopairs that integrates better with status lines (than nvim-autopairs and vim autopairs they are still wonderful plugins tho)
+-- i made it all work in insert mode it also moves the cursor a lot less
 
 local M = {};
 

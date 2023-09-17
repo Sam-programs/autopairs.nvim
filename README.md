@@ -74,4 +74,8 @@ Insert new indented line after Return (only for {})
 ```
 Skip ' when inside a word
 
-Ignore auto pair when previous character is \
+Ignore auto pair when the previous character is \
+
+this is a personal project for c and c++
+as of right now it seems complete without any issue for c and c++
+i will not be working on it anymore (unless there is a serious issue)
