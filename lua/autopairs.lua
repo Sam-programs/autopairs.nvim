@@ -77,25 +77,14 @@ local semiOutPair = {
 }
 
 --plugin code
+
+-- hybird between lisp indent and c indent
 local function hyindent(lnum)
    local lispindent = vim.fn.lispindent(lnum + 1)
-   local cindent = vim.fn.cindent(lnum + 1)
-   local indent = vim.fn.indent(lnum + 1)
-   local chosen = indent
-   if lispindent > chosen then
-      chosen = lispindent 
+   if lispindent == 0 then
+      return vim.fn.cindent(lnum + 1)
    end
-   if cindent > chosen then
-      chosen = cindent 
-   end
-   return chosen
-end
--- returns the a formatted version of lnum
-local format = function(line,lnum)
-   local indentLevel = hyindent(lnum)
-   local spacesAtBeginning = 0;
-   while spacesAtBeginning < #line do
-   end
+   return lispindent
 end
 
 local function init()
@@ -174,8 +163,6 @@ local function init()
    local api = vim.api
    local OPENING = 1
    local CLOSING = 2
-   -- a hybird between lispindent ,cindent and indent
-   -- uses 0 indexing
    local function semicolon_handler()
       local r, c = unpack(api.nvim_win_get_cursor(0));
       r = r - 1
@@ -261,27 +248,6 @@ local function init()
          end
          line = insertChar(line, cursorCol, close);
          cursorCol = origncalCursorCol + 1
-      end
-      local indentLevel = hyindent(cursorRow)
-      --this is not good code but
-      --REFACTORME
-      --i didn't make it into it's own function because i want to allow custom formatting functions
-      --but i need the cursor offset (yea am lazy)
-      local spacesAtBeginning = 0
-      while spacesAtBeginning < #line do
-         if stri(line, spacesAtBeginning) ~= ' ' then
-            break;
-         end
-         spacesAtBeginning = spacesAtBeginning + 1
-      end
-      if spacesAtBeginning < indentLevel then
-         line = strrepeat(" ", indentLevel - spacesAtBeginning) .. line
-         cursorCol = indentLevel - spacesAtBeginning + cursorCol
-      else
-         if spacesAtBeginning > indentLevel then
-            line = strsub(line, spacesAtBeginning - indentLevel)
-            cursorCol = indentLevel - spacesAtBeginning + cursorCol
-         end
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol })
