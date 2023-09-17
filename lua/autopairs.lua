@@ -212,11 +212,11 @@ local function init()
       return distance
    end
 
-   local function distanceToPrevWord(i, line)
+   local function distanceToEndOfPrevWord(i, line)
       local distance = 1
       while distance < i do
          if letters[stri(line, i - distance)] == nil then
-            distance = distance - 1
+            distance = distance + 1
             break;
          end
          distance = distance + 1
@@ -300,7 +300,8 @@ local function init()
       end
       local distance = cursorCol - 1 + distanceToNextChar(cursorCol - 1, line, closing)
       line = rmChar(line, distance)
-      distance = distance - distanceToPrevWord(distance, line)
+      distance = distance - 1
+      distance = distance - distanceToEndOfPrevWord(distance, line) 
       line = insertChar(line, distance, closing)
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
