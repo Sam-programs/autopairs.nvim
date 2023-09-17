@@ -267,7 +267,7 @@ local function init()
       api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol + 1 })
    end
    for _, bracket in pairs(bracketList) do
-      vim.keymap.set("i", bracket[OPENING], function()
+      vim.keymap.set({"i","c"}, bracket[OPENING], function()
          brackets(bracket[OPENING], bracket[CLOSING])
       end)
    end
@@ -321,7 +321,7 @@ local function init()
    end)
    -- ' gets a speical function
    -- because i can't write can't properly without this function
-   vim.keymap.set("i", "\'", function()
+   vim.keymap.set({"i","c"}, "\'", function()
       local r, c = unpack(api.nvim_win_get_cursor(0));
       r = r - 1;
       local line = api.nvim_buf_get_lines(0, r, r + 1, false)[1];
