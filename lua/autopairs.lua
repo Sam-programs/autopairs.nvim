@@ -195,17 +195,7 @@ local function init()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
-      local current = stri(line, cursorCol)
-      local next = stri(line, cursorCol + 1)
-      if next == ';' then
-         return
-      end
-      if semiOutPair[OPENING][current] ~= nil then
-         line = insertChar(line, cursorCol + 2, ';');
-      end
-      if semiOutPair[CLOSING][current] ~= nil then
-         line = insertChar(line, cursorCol + 2, ';');
-      end
+      line = strsub(line,0,#line - 1) .. ';'
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
    local function distanceToNextWord(i, line)
