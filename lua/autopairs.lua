@@ -200,7 +200,7 @@ local function init()
    local function distanceToNextWord(i, line)
       local distance = 0
       while distance < #line - i do
-         if letters[stri(line[i + distance])] == nil then
+         if letters[stri(line,i + distance)] == nil then
              distance = distance - 1
              break;
          end
