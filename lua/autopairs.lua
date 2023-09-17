@@ -215,7 +215,6 @@ local function init()
       local distance = 1
       while distance < #line - i do
          if stri(line, i + distance) == c then
-            distance = distance - 1
             break;
          end
          distance = distance + 1
