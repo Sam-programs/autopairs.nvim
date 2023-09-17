@@ -257,7 +257,7 @@ local function init()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
-      local prev = stri(line, cursorCol)
+      local prev = stri(line, cursorCol - 1)
       local closing = ''
       for _, bracket in pairs(bracketList) do
          if prev == bracket[OPENING] then
@@ -268,7 +268,7 @@ local function init()
       if closing == '' then
          return
       end
-      local distance = cursorRow + distanceToNextChar(cursorRow, line,closing)
+      local distance = cursorRow - 1 + distanceToNextChar(cursorRow - 1, line,closing)
       line = rmChar(line,distance)
       api.nvim_buf_set_lines(0,cursorRow,cursorRow + 1,false,{line})
    end)
