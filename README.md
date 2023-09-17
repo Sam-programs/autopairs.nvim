@@ -57,10 +57,15 @@ Semiclon out of pair
 {;} -> {};
 (;) -> ();
 ```
-Word wrap
+word wrap + inverse wrap
 ```
--- |foo    -> (foo)
--- |foo.bar -> (foo).bar
+|foo    -> (foo)
+|foo.bar -> (foo).bar
+
+<C-e>
+(|foo).bar -> (|foo.bar)
+<C-a>
+(|foo.bar) -> (|foo).bar
 ```
 Insert new indented line after Return (only for {})
 ```
