@@ -333,10 +333,10 @@ local function init()
       if letters[prev] or
           prev == '\\'
       then
-         return '\'';
+         api.nvim_feedkeys('\'',"n",false);
       end
       brackets('\'', '\'');
-   end, { expr = true, noremap = true })
+   end)
 
    vim.keymap.set("i", "<BS>", function()
       local r, c = unpack(api.nvim_win_get_cursor(0));
