@@ -198,8 +198,8 @@ local function init()
       local finalChar = stri(line, #line - 1)
       if semiOutPair[CLOSING][finalChar] then
          line = strsub(line, 0, #line - 1) .. ';'
+         api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       end
-      api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
    local function distanceToNextWord(i, line)
       local distance = 1
