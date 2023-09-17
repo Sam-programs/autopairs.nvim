@@ -21,6 +21,7 @@ this is the default setup
 require("autopairs").setup({
    wrapForwardKey = '<C-e>',
    wrapBackwradKey = '<C-a>',
+   cmdline = true
    semiOutPair = {
       {
          ['{'] = true,
