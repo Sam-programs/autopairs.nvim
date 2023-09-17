@@ -268,7 +268,7 @@ local function init()
       if closing == '' then
          return
       end
-      local distance = cursorRow - 1 + distanceToNextChar(cursorRow - 1, line,closing)
+      local distance = cursorCol - 1 + distanceToNextChar(cursorCol - 1, line,closing)
       line = rmChar(line,distance)
       api.nvim_buf_set_lines(0,cursorRow,cursorRow + 1,false,{line})
    end)
