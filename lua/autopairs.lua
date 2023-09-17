@@ -199,10 +199,10 @@ local function init()
    end)
    local function distanceToNextWord(i, line)
       local distance = 0
-      while distance < #line - 1 - i   do
-         if letters[stri(line,i + distance)] == nil then
-             distance = distance - 1
-             break;
+      while distance < #line - i do
+         if letters[stri(line, i + distance)] == nil then
+            distance = distance - 1
+            break;
          end
          distance = distance + 1
       end
@@ -224,7 +224,7 @@ local function init()
           prev ~= '\\'
       then
          -- word wrapping
-         line = insertChar(line,distanceToNextWord(cursorCol + 1,line), close);
+         line = insertChar(line, cursorCol + distanceToNextWord(cursorCol + 1, line), close);
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol + 1 })
@@ -236,10 +236,10 @@ local function init()
    end
 
    vim.keymap.set("i", "<C-e>", function()
-       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
+      local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
-     local distance = distanceToNextWord(cursorRow,line)
+      local distance = distanceToNextWord(cursorRow, line)
    end)
    -- ' gets a speical function
    -- because i can't write can't properly without this function
