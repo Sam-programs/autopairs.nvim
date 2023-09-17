@@ -269,7 +269,7 @@ local function init()
       end)
       vim.keymap.set("c", bracket[OPENING], function()
          return bracket[OPENING] .. bracket[CLOSING] .. '<right>'
-      end)
+      end,{expr = true,noremap = true})
    end
 
    vim.keymap.set("i", wrapForwardKey, function()
