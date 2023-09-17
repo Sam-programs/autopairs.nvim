@@ -16,12 +16,11 @@ use {
 }
 ```
 ## setup
-``` lua 
-require("autopairs").setup({})
-```
 this is the default setup
 ```lua
 require("autopairs").setup({
+   wrapForwardKey = '<C-e>',
+   wrapBackwradKey = '<C-a>',
    semiOutPair = {
       {
          ['{'] = true,

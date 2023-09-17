@@ -79,6 +79,8 @@ local semiOutPair = {
    }
 }
 
+local wrapForwardKey = '<C-e>'
+local wrapBackwradKey = '<C-a>'
 --plugin code
 
 
@@ -262,7 +264,7 @@ local function init()
       end)
    end
 
-   vim.keymap.set("i", "<C-e>", function()
+   vim.keymap.set("i",wrapForwardKey, function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
@@ -283,7 +285,7 @@ local function init()
       line = insertChar(line, distance, closing)
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
-   vim.keymap.set("i", "<C-a>", function()
+   vim.keymap.set("i",wrapBackwradKey, function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
@@ -301,11 +303,11 @@ local function init()
       local distance = cursorCol - 1 + distanceToNextChar(cursorCol - 1, line, closing)
       line = rmChar(line, distance)
       distance = distance - 1
-      distance = distance - distanceToEndOfPrevWord(distance, line) 
+      distance = distance - distanceToEndOfPrevWord(distance, line)
       if distance >= cursorCol then
          line = insertChar(line, distance, closing)
-      else 
-         line = insertChar(line,cursorCol - 1, closing)
+      else
+         line = insertChar(line, cursorCol - 1, closing)
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
@@ -373,6 +375,12 @@ M.setup = function(config)
    end
    if config.semiOutPair then
       semiOutPair = config.semiOutPair
+   end
+   if config.wrapForwardKey then
+      wrapForwardKey = config.wrapForwardKey
+   end
+   if config.wrapBackwradKey then
+      wrapBackwradKey = config.wrapBackwradKey
    end
    init()
 end
