@@ -268,7 +268,7 @@ local function init()
          brackets(bracket[OPENING], bracket[CLOSING])
       end)
       vim.keymap.set("c", bracket[OPENING], function()
-         return bracket[OPENING] .. bracket[CLOSING] .. '<right>'
+         return bracket[OPENING] .. bracket[CLOSING] .. '<left>'
       end,{expr = true,noremap = true})
    end
 

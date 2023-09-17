@@ -76,6 +76,8 @@ Skip ' when inside a word
 
 Ignore auto pair when the previous character is \
 
+Works in the command line (note most features like word wrapping won't work in the command line)
+## update status
 this is a personal project for c and c++
 as of right now it seems complete without any issue for c and c++
 i will not be working on it anymore (unless there is a serious issue)
