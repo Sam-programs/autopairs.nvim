@@ -28,10 +28,10 @@ end
 -- insert an element to a string
 -- 0 indexing
 local function insertChar(str, i, c)
-   return strsub(str,1,i) .. c .. strsub(str,i + 1, #str)
+   return strsub(str,0,i) .. c .. strsub(str,i + 1, #str)
 end
 local function rmChar(str, i)
-   return strsub(str,1, i - 1)  .. strsub(str,i + 1, #str)
+   return strsub(str,0, i - 1)  .. strsub(str,i + 1, #str)
 end
 -- returns the number of occurences of c in str
 -- c is a character
