@@ -301,7 +301,7 @@ local function init()
       local distance = cursorCol - 1 + distanceToNextChar(cursorCol - 1, line, closing)
       line = rmChar(line, distance)
       distance = distance - distanceToPrevWord(distance, line)
-      line = insertChar(line, distance, closing)
+      line = insertChar(line, distance - 1, closing)
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
    end)
    -- ' gets a speical function
