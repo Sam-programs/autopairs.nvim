@@ -199,7 +199,7 @@ local function init()
    end)
    local function distanceToNextWord(i, line)
       local distance = 0
-      while distance < #line - i do
+      while distance < #line - 1 - i   do
          if letters[stri(line,i + distance)] == nil then
              distance = distance - 1
              break;
@@ -211,9 +211,7 @@ local function init()
    local function brackets(open, close)
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
-      local origncalCursorCol = cursorCol
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
-      local next = stri(line, cursorCol);
       local prev = stri(line, cursorCol - 1);
       local dataBeforeCursor = strsub(line, 0, cursorCol - 1);
       local dataAfterCursor = strsub(line, cursorCol);
@@ -227,16 +225,22 @@ local function init()
       then
          -- word wrapping
          line = insertChar(line,distanceToNextWord(cursorCol + 1,line), close);
-         cursorCol = origncalCursorCol + 1
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
-      api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol })
+      api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol + 1 })
    end
    for _, bracket in pairs(bracketList) do
       vim.keymap.set("i", bracket[OPENING], function()
          brackets(bracket[OPENING], bracket[CLOSING])
       end)
    end
+
+   vim.keymap.set("i", "<C-e>", function()
+       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
+      cursorRow = cursorRow - 1;
+      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
+     local distance = distanceToNextWord(cursorRow,line)
+   end)
    -- ' gets a speical function
    -- because i can't write can't properly without this function
    vim.keymap.set("i", "\'", function()
