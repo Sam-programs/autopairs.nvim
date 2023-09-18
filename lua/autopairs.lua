@@ -383,7 +383,7 @@ local function init()
          end
          local newCursorLine = spacesAtBeginning
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 1, false, { newCursorLine })
-         api.nvim_win_set_cursor(0, { cursorRow + 2, indentLevel + tabstop - 1 })
+         api.nvim_win_set_cursor(0, { cursorRow + 2, indentLevel + tabstop  })
          return
       end
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
