@@ -373,7 +373,6 @@ local function init()
          local indentLevel = hyindent(cursorRow + 1)
          dataAfterCursor = strrepeat(" ", indentLevel) .. dataAfterCursor
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
-         vim.cmd.sleep(2) --debug stop
       end
       local right =
           api.nvim_replace_termcodes("<right>", true, false, true)
@@ -382,7 +381,6 @@ local function init()
       -- FIXME:
       -- i have no clue why i need to move the cursor back and forwards to make the indetation update for enter
       vim.cmd("undojoin | call feedkeys(\"\\<left>\",'t')")
-      vim.cmd.sleep(2) --debug stop
       vim.cmd("undojoin | call feedkeys(\"\\<right>\",'t')");
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true);
       vim.cmd("undojoin | call feedkeys(\"\\<CR>\",'n')");
