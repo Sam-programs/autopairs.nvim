@@ -226,7 +226,7 @@ local function init()
    end
    local function saveUndo()
       local ctrlg = api.nvim_replace_termcodes("<C-g>", true, false, true)
-      api.nvim_feed_keys(ctrlg .. "u", "t", false);
+      api.nvim_feedkeys(ctrlg .. "u", "t", false);
    end
    local function distanceToNextChar(i, line, c)
       local distance = 1
