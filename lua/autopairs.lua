@@ -224,7 +224,10 @@ local function init()
       end
       return distance
    end
-
+   local function saveUndo()
+      local ctrlg = api.nvim_replace_termcodes("<C-g>", true, false, true)
+      api.nvim_feed_keys(ctrlg .. "u", "t", false);
+   end
    local function distanceToNextChar(i, line, c)
       local distance = 1
       while distance < #line - i do
@@ -243,7 +246,7 @@ local function init()
       local dataBeforeCursor                  = strsub(line, 0, cursorCol - 1);
       local dataAfterCursor                   = strsub(line, cursorCol);
       local filteredOpenBracketsBeforeCursor  = strcontains(dataBeforeCursor, open) -
-          strcontains(dataBeforeCursor, close);
+          strcontains(dataBeforeCursor, close)
       local filteredClosedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
       line                                    = insertChar(line, cursorCol - 1, open);
       --this might not be the best way to check if there are missing end brackets
@@ -256,6 +259,7 @@ local function init()
          line = insertChar(line, cursorCol + distance, close);
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
+      saveUndo()
       api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol + 1 })
    end
    for _, bracket in pairs(bracketList) do
@@ -289,6 +293,7 @@ local function init()
       distance = distance + distanceToNextWord(distance, line)
       line = insertChar(line, distance, closing)
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
+      saveUndo()
    end)
    vim.keymap.set("i", wrapBackwradKey, function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
@@ -315,6 +320,7 @@ local function init()
          line = insertChar(line, cursorCol - 1, closing)
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
+      saveUndo()
    end)
    -- ' gets a speical function
    -- because i can't write can't properly without this function
@@ -327,8 +333,10 @@ local function init()
           prev == '\\'
       then
          api.nvim_feedkeys('\'', "n", false);
+      else
+         brackets('\'', '\'');
       end
-      brackets('\'', '\'');
+      saveUndo()
    end)
 
    vim.keymap.set("i", "<BS>", function()
@@ -372,6 +380,7 @@ local function init()
       api.nvim_feedkeys(left .. right, "t", false)
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
       api.nvim_feedkeys(enter, "n", false)
+      saveUndo()
    end);
 end
 
