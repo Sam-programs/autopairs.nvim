@@ -357,7 +357,7 @@ local function init()
 
    --this works better than <ESC>O because it only draws the cursor once
    --this took hours of trying to perfect it all thanks to feedkeys
-   vim.keymap.set("i", "<CR>", function()
+   local function on_cr(opts)
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
@@ -380,11 +380,13 @@ local function init()
           api.nvim_replace_termcodes("<left>", true, false, true)
       -- FIXME:
       -- i have no clue why i need to move the cursor back and forwards to make the indetation update for enter
-      vim.cmd("undojoin | call feedkeys(\"\\<left>\",'t')")
-      vim.cmd("undojoin | call feedkeys(\"\\<right>\",'t')");
-      local enter = api.nvim_replace_termcodes("<CR>", true, false, true);
-      vim.cmd("undojoin | call feedkeys(\"\\<CR>\",'n')");
-   end);
+      api.nvim_feedkeys(left, "t", false)
+      api.nvim_feedkeys(right, "t", false)
+      local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
+      api.nvim_feedkeys(enter, "tn", false)
+   end
+   vim.api.nvim_create_user_command("CR",on_cr,{})
+   vim.keymap.set("i", "<CR>", "<CMD>undojoin | CR<CR>")
 end
 
 M.setup = function(config)
