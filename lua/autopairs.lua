@@ -384,6 +384,7 @@ local function init()
       api.nvim_feedkeys(right, "t", false)
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
       api.nvim_feedkeys(enter, "n", false)
+      api.nvim_feedkeys(ctrlg .. "U", "t", false) -- make new text get there own undo blocks
    end);
 end
 
