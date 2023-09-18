@@ -383,9 +383,7 @@ local function init()
       api.nvim_feedkeys(ctrlg .. "U", "t", false) -- do not update the undoblock with cursor movement
       api.nvim_feedkeys(right, "t", false)
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
-      vim.cmd("undojoin")
       api.nvim_feedkeys(enter, "n", false)
-      api.nvim_feedkeys(ctrlg .. "u", "t", false) -- i think i should call this after undojoin 
    end);
 end
 
