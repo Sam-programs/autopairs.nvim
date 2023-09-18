@@ -357,7 +357,7 @@ local function init()
 
    --this works better than <ESC>O because it only draws the cursor once
    --this took hours of trying to perfect it all thanks to feedkeys
-   local function on_cr(opts)
+   vim.keymap.set("i", "<CR>", function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
@@ -369,24 +369,26 @@ local function init()
 
          local dataAfterCursor = strsub(line, cursorCol, #line)
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 1, false, { dataAfterCursor })
-
-         local indentLevel = hyindent(cursorRow + 1)
-         dataAfterCursor = strrepeat(" ", indentLevel) .. dataAfterCursor
-         api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
+         -- who needs builtin functions aways
+         -- DO IT YOURSELF
+         local tabstop = vim.o.tabstop
+         local spacesAtBeginning = ''
+         local indentLevel = 0
+         if tabstop > 0 then
+            indentLevel = hyindent(cursorRow + 1)
+            spacesAtBeginning = strrepeat(" ", indentLevel)
+            dataAfterCursor = spacesAtBeginning .. dataAfterCursor
+            api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
+            spacesAtBeginning = spacesAtBeginning .. strrepeat(" ", tabstop);
+         end
+         local newCursorLine = spacesAtBeginning
+         api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 1, false, { newCursorLine })
+         api.nvim_win_set_cursor(0, { cursorRow + 1, indentLevel + tabstop - 1 })
+         return
       end
-      local right =
-          api.nvim_replace_termcodes("<right>", true, false, true)
-      local left =
-          api.nvim_replace_termcodes("<left>", true, false, true)
-      -- FIXME:
-      -- i have no clue why i need to move the cursor back and forwards to make the indetation update for enter
-      api.nvim_feedkeys(left, "t", false)
-      api.nvim_feedkeys(right, "t", false)
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
-      api.nvim_feedkeys(enter, "tn", false)
-   end
-   vim.api.nvim_create_user_command("CR",on_cr,{})
-   vim.keymap.set("i", "<CR>", "<CMD>undojoin | CR<CR>")
+      api.nvim_feedkeys(enter, "n", false)
+   end);
 end
 
 M.setup = function(config)
