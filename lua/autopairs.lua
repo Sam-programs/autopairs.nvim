@@ -384,7 +384,7 @@ local function init()
       api.nvim_feedkeys(left, "t", false)
       api.nvim_feedkeys(right, "t", false)
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
-      api.nvim_feedkeys(enter, "in", false)
+      api.nvim_feedkeys(enter, "tn", false)
    end);
 end
 
