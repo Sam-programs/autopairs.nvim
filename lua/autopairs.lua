@@ -373,10 +373,16 @@ local function init()
          local indentLevel = hyindent(cursorRow + 1)
          dataAfterCursor = strrepeat(" ", indentLevel) .. dataAfterCursor
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
+      else
+         local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
+         api.nvim_feedkeys(enter, "t", false)
+         return
       end
       local ctrlg = api.nvim_replace_termcodes("<c-g>", true, false, true)
-      local right = ctrlg .. "u" api.nvim_replace_termcodes("<right>", true, false, true)
-      local left = ctrlg .. "u" api.nvim_replace_termcodes("<left>", true, false, true)
+      local right = ctrlg .. "u"
+      api.nvim_replace_termcodes("<right>", true, false, true)
+      local left = ctrlg .. "u"
+      api.nvim_replace_termcodes("<left>", true, false, true)
       -- FIXME:
       -- i have no clue why i need to move the cursor back and forwards to make the indetation update for enter
       api.nvim_feedkeys(left, "t", false)
