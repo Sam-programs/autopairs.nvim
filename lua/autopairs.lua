@@ -381,6 +381,7 @@ local function init()
       -- FIXME:
       -- i have no clue why i need to move the cursor back and forwards to make the indetation update for enter
       vim.cmd("undojoin | call feedkeys(\"\\<left>\",'t')")
+      vim.cmd.sleep(5) --debug stop
       vim.cmd("undojoin | call feedkeys(\"\\<right>\",'t')");
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true);
       vim.cmd("undojoin | call feedkeys(\"\\<CR>\",'n')");
