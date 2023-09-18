@@ -380,7 +380,6 @@ local function init()
       api.nvim_feedkeys(left .. right, "t", false)
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
       api.nvim_feedkeys(enter, "n", false)
-      saveUndo()
    end);
 end
 
