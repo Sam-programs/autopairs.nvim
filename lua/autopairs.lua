@@ -363,7 +363,6 @@ local function init()
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
       local prev = stri(line, cursorCol - 1)
       local cur = stri(line, cursorCol)
-      local ctrlg = api.nvim_replace_termcodes("<c-g>", true, false, true)
       if prev == '{' and cur == '}' then
          local dataBeforeCursor = strsub(line, 0, cursorCol - 1)
          api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { dataBeforeCursor })
@@ -375,6 +374,7 @@ local function init()
          dataAfterCursor = strrepeat(" ", indentLevel) .. dataAfterCursor
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
       end
+      local ctrlg = api.nvim_replace_termcodes("<c-g>", true, false, true)
       local right = api.nvim_replace_termcodes("<right>", true, false, true)
       local left = api.nvim_replace_termcodes("<left>", true, false, true)
       -- i have no clue why i need to move the cursor back and forwards to make the indetation update for enter
