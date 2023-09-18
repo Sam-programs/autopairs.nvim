@@ -239,16 +239,24 @@ local function init()
       return distance
    end
    local function brackets(open, close)
-      local cursorRow, cursorCol              = unpack(api.nvim_win_get_cursor(0));
-      cursorRow                               = cursorRow - 1;
-      local line                              = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
-      local prev                              = stri(line, cursorCol - 1);
-      local dataBeforeCursor                  = strsub(line, 0, cursorCol - 1);
-      local dataAfterCursor                   = strsub(line, cursorCol);
-      local filteredOpenBracketsBeforeCursor  = strcontains(dataBeforeCursor, open) -
-          strcontains(dataBeforeCursor, close)
-      local filteredClosedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
-      line                                    = insertChar(line, cursorCol - 1, open);
+      local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
+      cursorRow                  = cursorRow - 1;
+      local line                 = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1];
+      local prev                 = stri(line, cursorCol - 1);
+      local dataBeforeCursor     = strsub(line, 0, cursorCol - 1);
+      local dataAfterCursor      = strsub(line, cursorCol);
+      local filteredOpenBracketsBeforeCursor
+      local filteredClosedBracketsAfterCursor
+      -- quotes don't need filtering
+      if open ~= close then
+         filteredOpenBracketsBeforeCursor  = strcontains(dataBeforeCursor, open) -
+             strcontains(dataBeforeCursor, close)
+         filteredClosedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
+      else
+         filteredOpenBracketsBeforeCursor  = strcontains(dataBeforeCursor, open)
+         filteredClosedBracketsAfterCursor = strcontains(dataAfterCursor, close)
+      end
+      line = insertChar(line, cursorCol - 1, open);
       --this might not be the best way to check if there are missing end brackets
       --but its good enough
       if filteredClosedBracketsAfterCursor <= filteredOpenBracketsBeforeCursor and
