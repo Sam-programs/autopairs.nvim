@@ -383,7 +383,7 @@ local function init()
       vim.cmd("undojoin | call feedkeys(\"\\<left>\",'t')")
       vim.cmd("undojoin | call feedkeys(\"\\<right>\",'t')");
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true);
-      vim.cmd("undojoin | call feedkeys(\"\\<CR>\",'t')");
+      vim.cmd("undojoin | call feedkeys(\"\\<CR>\",'n')");
    end);
 end
 
