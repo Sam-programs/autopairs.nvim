@@ -375,12 +375,10 @@ local function init()
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
       end
       local ctrlg = api.nvim_replace_termcodes("<c-g>", true, false, true)
-      local right = api.nvim_replace_termcodes("<right>", true, false, true)
-      local left = api.nvim_replace_termcodes("<left>", true, false, true)
+      local right = ctrlg .. "U" .. api.nvim_replace_termcodes("<right>", true, false, true)
+      local left = ctrlg .. "U" .. api.nvim_replace_termcodes("<left>", true, false, true)
       -- i have no clue why i need to move the cursor back and forwards to make the indetation update for enter
-      api.nvim_feedkeys(ctrlg .. "U", "t", false) -- do not update the undoblock with cursor movement
       api.nvim_feedkeys(left, "t", false)
-      api.nvim_feedkeys(ctrlg .. "U", "t", false) -- do not update the undoblock with cursor movement
       api.nvim_feedkeys(right, "t", false)
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
       api.nvim_feedkeys(enter, "n", false)
