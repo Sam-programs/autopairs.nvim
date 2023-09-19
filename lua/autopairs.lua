@@ -245,21 +245,21 @@ local function init()
       local prev                 = stri(line, cursorCol - 1);
       local dataBeforeCursor     = strsub(line, 0, cursorCol - 1);
       local dataAfterCursor      = strsub(line, cursorCol);
-      local filteredOpenBracketsBeforeCursor
-      local filteredClosedBracketsAfterCursor
+      local filteredOpenBrackets
+      local filteredClosedBrackets
       -- quotes don't need filtering
       if open ~= close then
-         filteredOpenBracketsBeforeCursor  = strcontains(dataBeforeCursor, open) -
+         filteredOpenBrackets  = strcontains(dataBeforeCursor, open) -
              strcontains(dataBeforeCursor, close)
-         filteredClosedBracketsAfterCursor = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
+         filteredClosedBrackets = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
       else
-         filteredOpenBracketsBeforeCursor  = strcontains(dataBeforeCursor, open)
-         filteredClosedBracketsAfterCursor = strcontains(dataAfterCursor, close)
+         filteredOpenBrackets  = strcontains(dataBeforeCursor, open)
+         filteredClosedBrackets = strcontains(dataAfterCursor, close)
       end
       line = insertChar(line, cursorCol - 1, open);
       --this might not be the best way to check if there are missing end brackets
       --but its good enough
-      if filteredClosedBracketsAfterCursor <= filteredOpenBracketsBeforeCursor and
+      if filteredClosedBrackets <= filteredOpenBrackets and
           prev ~= '\\'
       then
          -- word wrapping
