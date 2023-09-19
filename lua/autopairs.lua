@@ -356,7 +356,7 @@ local function init()
       for _, bracket in pairs(bracketList) do
          if prev == bracket[OPENING] then
             if next == bracket[CLOSING] then
-               return '<right><BS><BS>';
+               return '<BS><DEL>';
             end
          end
       end
