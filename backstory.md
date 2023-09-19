@@ -26,11 +26,10 @@ this would have probably made the problem solved in 2 days instead of 3
 4. trying to make something perfect may not always be a bad idea
 ## the nvim-autopairs situation
 now during the first 2 days i went to check nvim-autopairs to see if they have resolved this issue
-and they haven't i couldn't find a perfect solution to give them as nvim-autopairs is structured to use keys
-but i did find a way to make the cursor not move twice in the expansion of the {} pair with only keys and made a pr (i can't link it as i don't have internet atm)  
-however the more i think about the issue the more i think my solution doesn't fit well with nvim-autopairs as i just figured out that i broke the undo-blocks after the expansion of the {} pair (didn't test this but pretty sure i broke it)  
-instead of trying harder and harder to fix nvim-autopairs 
+and they haven't and i found a good solution to give to nvim-autopairs using only use keys
+
 i plan to add custom pairs and endwise to my plugin to make the plugin usable for most languages   
+with the goal of fully working in insert mode and not moving the cursor twice
 
 ## the end
 so yeah that's the story of how i hacked in an autopairs plugin in 3 days
