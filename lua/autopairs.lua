@@ -180,14 +180,19 @@ local function init()
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
       local current = stri(line, cursorCol)
       local next = stri(line, cursorCol + 1)
-      if next == ';' then
+      local prev = stri(line, cursorCol - 1)
+      if next == ';' or prev == ';'then
          return ''
       end
       if semiOutPair[OPENING][current] ~= nil then
-         return '<right><right>;<left><left>'
+         if semiOutPair[CLOSING][next] then
+            return '<right><right>;<left><left>'
+         end
       end
       if semiOutPair[CLOSING][current] ~= nil then
-         return '<right>;<left><left>'
+         if semiOutPair[CLOSING][prev] then
+            return '<right>;<left><left>'
+         end
       end
       return ';'
    end, { expr = true, noremap = true })
