@@ -249,12 +249,12 @@ local function init()
       local filteredClosedBrackets
       -- quotes don't need filtering
       if open ~= close then
-         filteredOpenBrackets  = strcontains(dataBeforeCursor, open) -
+         filteredOpenBrackets   = strcontains(dataBeforeCursor, open) -
              strcontains(dataBeforeCursor, close)
          filteredClosedBrackets = strcontains(dataAfterCursor, close) - strcontains(dataAfterCursor, open);
       else
-         filteredOpenBrackets  = strcontains(dataBeforeCursor, open)
-         filteredClosedBrackets = strcontains(dataAfterCursor, close)
+         filteredClosedBrackets = strcontains(dataBeforeCursor, close)
+         filteredOpenBrackets   = strcontains(dataAfterCursor, open)
       end
       line = insertChar(line, cursorCol - 1, open);
       --this might not be the best way to check if there are missing end brackets
