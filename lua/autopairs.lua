@@ -190,7 +190,7 @@ local function init()
          end
       end
       if semiOutPair[CLOSING][current] ~= nil then
-         if semiOutPair[CLOSING][prev] then
+         if semiOutPair[OPENING][prev] then
             return '<right>;<left><left>'
          end
       end
