@@ -186,12 +186,12 @@ local function init()
       end
       if semiOutPair[OPENING][current] ~= nil then
          if semiOutPair[CLOSING][next] then
-            api.nvim_buf_set_text(0, cursorRow, cursorCol + 2, cursorRow + 1, cursorCol + 2, { ';' });
+            api.nvim_buf_set_text(0, cursorRow, cursorCol + 2, cursorRow, cursorCol + 2, { ';' });
          end
       end
       if semiOutPair[CLOSING][current] ~= nil then
          if semiOutPair[OPENING][prev] then
-            api.nvim_buf_set_text(0, cursorRow, cursorCol + 1, cursorRow + 1, cursorCol + 1, { ';' });
+            api.nvim_buf_set_text(0, cursorRow, cursorCol + 1, cursorRow, cursorCol + 1, { ';' });
          end
       end
       api.nvim_buf_set_text(0, cursorRow, cursorCol, cursorRow + 1, cursorCol, { ';' });
