@@ -6,13 +6,13 @@ i noticed micro was on a the terminal editors list i went to check it out for fu
 then i notice it had autopairs which were something i hated from vscode(because they were so bad)   
 i then realised how helpful they can be   
 ## development
-i ddg'd "vim brackets" found a stackoverflow question with an answer that was in vanilla vim   
+i ddg'd "vim brackets" hoping for a plugin but i found a stackoverflow question with an answer that was in vanilla vim   
 https://stackoverflow.com/questions/21316727/automatic-closing-brackets-for-vim  
 the answer was pretty barebones it had weird cursor movement and freezing that was very annoying   
-but then i said since the answer is so close to what i want why not try to improve it   
+but then i said since the answer is so close to what i want why not try to improve it  and learn plugin development on the way 
 ### the problems   
 1. when writing {;} the cursor freezes (also happeneding with expanding the {} pair)   
-2. when expanding the {} the cursor moves 2 times   
+2. when expanding the {} the cursor moves 2 times  and also switches to normal mode 
 the first issue was very easy to fix by mapping the semicolon/return key  
 the second issue took 1.5~ days of searching throught (n)vim docs   
 i settled on not relying on any key presses and fully using the nvim-api  
