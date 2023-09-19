@@ -255,6 +255,11 @@ local function init()
       else
          filteredClosedBrackets = strcontains(dataBeforeCursor, close) % 2
          filteredOpenBrackets   = strcontains(dataAfterCursor, open) % 2
+         --avoid the check for less than
+         if filteredClosedBrackets ~= filteredOpenBrackets then
+            filteredOpenBrackets = 1
+            filteredClosedBrackets = 0
+         end
       end
       line = insertChar(line, cursorCol - 1, open);
       --this might not be the best way to check if there are missing end brackets
