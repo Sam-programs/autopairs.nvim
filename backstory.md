@@ -25,11 +25,7 @@ this would have probably made the problem solved in 2 days instead of 3
 3. never to rush to test code, it's always a good idea to reread the code at least once before testing it
 4. trying to make something perfect may not always be a bad idea
 ## the nvim-autopairs situation
-now during the first 2 days i went to check nvim-autopairs to see if they have resolved this issue
-and they haven't and i found a good solution to give to nvim-autopairs using only use keys
-
-i plan to add custom pairs and endwise to my plugin to make the plugin usable for most languages   
-with the goal of fully working in insert mode and not moving the cursor twice
+since i have basically fixed all cursor issues in nvim-autopairs the only advantage this plugin has now is it doesn't leave insert mode which doesn't update lualine diagnostics
 
 ## the end
 so yeah that's the story of how i hacked in an autopairs plugin in 3 days
