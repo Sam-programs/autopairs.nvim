@@ -257,8 +257,8 @@ local function init()
          filteredOpenBrackets   = strcontains(dataAfterCursor, open) % 2
          --avoid the check for less than
          if filteredClosedBrackets ~= filteredOpenBrackets then
-            filteredOpenBrackets = 1
-            filteredClosedBrackets = 0
+            filteredOpenBrackets = 0
+            filteredClosedBrackets = 1
          end
       end
       line = insertChar(line, cursorCol - 1, open);
