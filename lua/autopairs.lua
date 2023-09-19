@@ -182,19 +182,21 @@ local function init()
       local next = stri(line, cursorCol + 1)
       local prev = stri(line, cursorCol - 1)
       if next == ';' or prev == ';' then
-         return ''
+         return
       end
       if semiOutPair[OPENING][current] ~= nil then
          if semiOutPair[CLOSING][next] then
             api.nvim_buf_set_text(0, cursorRow, cursorCol + 2, cursorRow, cursorCol + 2, { ';' });
+            return
          end
       end
       if semiOutPair[CLOSING][current] ~= nil then
          if semiOutPair[OPENING][prev] then
             api.nvim_buf_set_text(0, cursorRow, cursorCol + 1, cursorRow, cursorCol + 1, { ';' });
+            return
          end
       end
-      api.nvim_buf_set_text(0, cursorRow, cursorCol, cursorRow + 1, cursorCol, { ';' });
+      api.nvim_buf_set_text(0, cursorRow, cursorCol, cursorRow, cursorCol, { ';' });
    end)
    vim.keymap.set("n", ";", function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
