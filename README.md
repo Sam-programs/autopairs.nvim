@@ -78,3 +78,12 @@ Skip ' when inside a word
 Ignore auto pair when the previous character is \
 
 Works in the command line (note most features like word wrapping won't work in the command line)
+
+i didn't make a jump out of pair function becaues this does the job for me
+```lua
+vim.keymap.set("i", "<C-j>", "<down><end><cr>")
+{
+     |   C-j here
+}
+| and you go here
+```
