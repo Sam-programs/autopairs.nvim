@@ -233,7 +233,7 @@ local function init()
    end
    local function saveUndo()
       local ctrlg = api.nvim_replace_termcodes("<C-g>", true, false, true)
-      api.nvim_feedkeys(ctrlg .. "u", "t", false);
+      api.nvim_feedkeys(ctrlg .. "u", "n", false);
    end
    local function distanceToNextChar(i, line, c)
       local distance = 1
@@ -404,8 +404,7 @@ local function init()
          local newCursorLine = spacesAtBeginning
          api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 1, false, { newCursorLine })
          api.nvim_win_set_cursor(0, { cursorRow + 2, indentLevel + tabstop })
-         local ctrlg = api.nvim_replace_termcodes("<c-g>", true, false, true)
-         api.nvim_feedkeys(ctrlg .. "u", "n", false)
+         saveUndo()
          return
       end
       local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
