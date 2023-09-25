@@ -426,7 +426,7 @@ M.setup = function(config)
       wrapBackwradKey = config.wrapBackwradKey
    end
    if config.cmdline then
-      wrapBackwradKey = config.cmdline
+      cmdline = config.cmdline
    end
    init()
 end
