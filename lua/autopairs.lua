@@ -399,7 +399,7 @@ local function init()
                   vim.o.cindent = true
                end
                return
-               '<CR><C-f><Up><end><cr><C-f><cmd>lua vim.o.cindent = OLD_cindent vim.o.cinkeys = OLD_cinkeys vim.o.indentkeys = OLD_indentkeys<cr>'
+               '<cr><cr><C-f><Up><C-f><c-g>u<cmd>lua vim.o.cindent = OLD_cindent vim.o.cinkeys = OLD_cinkeys vim.o.indentkeys = OLD_indentkeys<cr>'
             end
          end
       end
