@@ -376,40 +376,36 @@ local function init()
    end, { expr = true, noremap = true })
 
    --this works better than <ESC>O because it only draws the cursor once
-   --this took hours of trying to perfect it all thanks to feedkeys
-   vim.keymap.set("i", "<CR>", function()
+   --it would have been easier to make this perfect make if i had learnt to not skim documentation
+   vim.keymap.set("i", "<cr>", function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
       local prev = stri(line, cursorCol - 1)
       local cur = stri(line, cursorCol)
-      if prev == '{' and cur == '}' then
-         local dataBeforeCursor = strsub(line, 0, cursorCol - 1)
-         api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { dataBeforeCursor })
-
-         local dataAfterCursor = strsub(line, cursorCol, #line)
-         api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 1, false, { dataAfterCursor })
-         -- who needs builtin functions aways
-         -- DO IT YOURSELF
-         local tabstop = vim.o.tabstop
-         local spacesAtBeginning = ''
-         local indentLevel = 0
-         if tabstop > 0 then
-            indentLevel = hyindent(cursorRow + 1)
-            spacesAtBeginning = strrepeat(" ", indentLevel)
-            dataAfterCursor = spacesAtBeginning .. dataAfterCursor
-            api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 2, false, { dataAfterCursor })
-            spacesAtBeginning = spacesAtBeginning .. strrepeat(" ", tabstop);
+      for _, bracket in pairs(bracketList) do
+         if prev == bracket[OPENING] then
+            if cur == bracket[CLOSING] then
+               OLD_cinkeys = vim.o.cinkeys
+               OLD_indentkeys = vim.o.indentkeys
+               OLD_cindent = vim.o.cindent
+               if vim.o.indentexpr ~= '' then
+                  vim.o.indentkeys = '!^F'
+               else
+                  -- we fall back to cindent even if there is no indenting 
+                  -- neovim falls back to cindent or lispindent if lisp is on
+                  -- which means this shouldn't work well with lisp files
+                  vim.o.cinkeys = '!^F'
+                  vim.o.cindent = true
+               end
+               return
+               '<CR><C-f><Up><end><cr><C-f><cmd>lua vim.o.cindent = OLD_cindent vim.o.cinkeys = OLD_cinkeys vim.o.indentkeys = OLD_indentkeys<cr>'
+            end
          end
-         local newCursorLine = spacesAtBeginning
-         api.nvim_buf_set_lines(0, cursorRow + 1, cursorRow + 1, false, { newCursorLine })
-         api.nvim_win_set_cursor(0, { cursorRow + 2, indentLevel + tabstop })
-         saveUndo()
-         return
       end
-      local enter = api.nvim_replace_termcodes("<CR>", true, false, true)
-      api.nvim_feedkeys(enter, "n", false)
-   end);
+
+      return '<CR>'
+   end, { expr = true, noremap = true })
 end
 
 M.setup = function(config)
