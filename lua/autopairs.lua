@@ -197,6 +197,7 @@ local function init()
          end
       end
       api.nvim_buf_set_text(0, cursorRow, cursorCol, cursorRow, cursorCol, { ';' });
+      api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol + 1 })
    end)
    vim.keymap.set("n", ";", function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
@@ -315,6 +316,7 @@ local function init()
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       saveUndo()
    end)
+
    vim.keymap.set("i", wrapBackwradKey, function()
       local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
       cursorRow = cursorRow - 1;
@@ -392,9 +394,6 @@ local function init()
                if vim.o.indentexpr ~= '' then
                   vim.o.indentkeys = '!^F'
                else
-                  -- we fall back to cindent even if there is no indenting 
-                  -- neovim falls back to cindent or lispindent if lisp is on
-                  -- which means this shouldn't work well with lisp files
                   vim.o.cinkeys = '!^F'
                   vim.o.cindent = true
                end
