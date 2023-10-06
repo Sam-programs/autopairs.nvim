@@ -90,80 +90,11 @@ local semiOutPair     = {
 local wrapForwardKey  = '<C-e>'
 local wrapBackwradKey = '<C-a>'
 local cmdline         = true
-local wordRegex = '%w'
+local wordRegex       = '%w'
 --plugin code
 
 
 local function init()
-   --i could use a string contains
-   --but this is cooler
-   --letters to wrap when pressing () over one of them
-   -- |foo_    -> (foo_)
-   -- |foo.bar -> (foo).bar
-   local letters = {
-      ['a'] = true,
-      ['b'] = true,
-      ['c'] = true,
-      ['d'] = true,
-      ['e'] = true,
-      ['f'] = true,
-      ['g'] = true,
-      ['h'] = true,
-      ['i'] = true,
-      ['j'] = true,
-      ['k'] = true,
-      ['l'] = true,
-      ['m'] = true,
-      ['n'] = true,
-      ['o'] = true,
-      ['p'] = true,
-      ['q'] = true,
-      ['r'] = true,
-      ['s'] = true,
-      ['t'] = true,
-      ['u'] = true,
-      ['v'] = true,
-      ['w'] = true,
-      ['x'] = true,
-      ['y'] = true,
-      ['z'] = true,
-      ['A'] = true,
-      ['B'] = true,
-      ['C'] = true,
-      ['D'] = true,
-      ['E'] = true,
-      ['F'] = true,
-      ['G'] = true,
-      ['H'] = true,
-      ['I'] = true,
-      ['J'] = true,
-      ['K'] = true,
-      ['L'] = true,
-      ['M'] = true,
-      ['N'] = true,
-      ['O'] = true,
-      ['P'] = true,
-      ['Q'] = true,
-      ['R'] = true,
-      ['S'] = true,
-      ['T'] = true,
-      ['U'] = true,
-      ['V'] = true,
-      ['W'] = true,
-      ['X'] = true,
-      ['Y'] = true,
-      ['Z'] = true,
-      ['0'] = true,
-      ['1'] = true,
-      ['2'] = true,
-      ['3'] = true,
-      ['4'] = true,
-      ['5'] = true,
-      ['6'] = true,
-      ['7'] = true,
-      ['8'] = true,
-      ['9'] = true,
-   }
    local api = vim.api
    local OPENING = 1
    local CLOSING = 2
@@ -213,7 +144,7 @@ local function init()
    local function distanceToNextWord(i, line)
       local distance = 1
       while distance < #line - i do
-         if string.gmatch(stri(line, i + distance),wordRegex)() == nil then
+         if string.gmatch(stri(line, i + distance), wordRegex)() == nil then
             distance = distance - 1
             break;
          end
@@ -225,7 +156,7 @@ local function init()
    local function distanceToEndOfPrevWord(i, line)
       local distance = 0
       while distance < i do
-         if string.gmatch(stri(line, i - distance),wordRegex)() == nil then
+         if string.gmatch(stri(line, i - distance), wordRegex)() == nil then
             distance = distance + 1
             break;
          end
@@ -349,7 +280,7 @@ local function init()
       local line = api.nvim_buf_get_lines(0, r, r + 1, false)[1];
       local prev = stri(line, c - 1)
       -- weirdly gmatch accepts empty strings as words
-      if #prev ~= 0 and string.gmatch(prev,wordRegex) or
+      if #prev ~= 0 and string.gmatch(prev, wordRegex) or
           prev == '\\'
       then
          api.nvim_feedkeys('\'', "n", false);
