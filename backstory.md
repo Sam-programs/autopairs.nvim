@@ -3,7 +3,7 @@ honestly i was just very bored and didn't want to go to bed so i wrote this
 i was on the c/c++ help server on discord   
 trying to help people then someone ran the /howto Choosing an IDE/Editor command  
 i noticed micro was on a the terminal editors list i went to check it out for fun   
-then i notice it had autopairs which were something i hated from vscode(because they were so bad)   
+then i notice it had autopairs which were something i hated from vscode(because they were so bad like why do you close the pair for me if i have to press it to exit out of it)   
 i then realised how helpful they can be   
 ## development
 i ddg'd "vim brackets" hoping for a plugin but i found a stackoverflow question with an answer that was in vanilla vim   
