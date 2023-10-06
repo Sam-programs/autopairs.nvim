@@ -252,6 +252,16 @@ local function init()
                OLD_cinkeys = vim.o.cinkeys
                OLD_indentkeys = vim.o.indentkeys
                OLD_cindent = vim.o.cindent
+               OLD_indentexpr = vim.o.indentexpr
+               if vim.o.filetype == 'lisp' then
+                  vim.cmd(
+                     'if !exists("*GetLispIndent")\n' ..
+                     'function GetLispIndent() \n' ..
+                     'return lispindent(v:lnum) \n' ..
+                     'endfunction\n' ..
+                     'endif \n')
+                  vim.o.indentexpr = 'GetLispIndent()'
+               end
                if vim.o.indentexpr ~= '' then
                   vim.o.indentkeys = '!^F'
                else
@@ -262,9 +272,10 @@ local function init()
                    '<cr><cr><C-f><Up><C-f><c-g>u' ..
                    -- restore the user's configuration
                    '<cmd>lua ' ..
-                   'vim.o.cindent    = OLD_cindent ' ..
-                   'vim.o.cinkeys    = OLD_cinkeys ' ..
-                   'vim.o.indentkeys = OLD_indentkeys<cr>'
+                   ' vim.o.cindent    = OLD_cindent' ..
+                   ' vim.o.cinkeys    = OLD_cinkeys' ..
+                   ' vim.o.indentkeys = OLD_indentkeys' ..
+                   ' vim.o.indentexpr = OLD_indentexpr<cr>'
             end
          end
       end
