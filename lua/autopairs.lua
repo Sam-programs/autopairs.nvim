@@ -16,8 +16,6 @@ local M = {};
 
 M.state = {
    disabled = false,
-   rules = {},
-   buf_ts = {},
 }
 -- string utils
 
@@ -55,36 +53,12 @@ local function strcontains(str, c)
    return count
 end
 
-local function strrepeat(str, n)
-   local i = 0
-   local result = '';
-   while i < n do
-      result = result .. str
-      i = i + 1
-   end
-   return result
-end
-
 local bracketList     = {
    { '{',  '}' },
    { '(',  ')' },
    { '[',  ']' },
    { '\"', '\"' },
    { '\'', '\'' },
-}
-
---  don't get confused you are not a compiler
--- (;) -> ();
--- {;} -> {};
-local semiOutPair     = {
-   {
-      ['{'] = true,
-      ['('] = true,
-   },
-   {
-      [')'] = true,
-      ['}'] = true,
-   }
 }
 
 local wrapForwardKey  = '<C-e>'
@@ -98,49 +72,6 @@ local function init()
    local api = vim.api
    local OPENING = 1
    local CLOSING = 2
-   -- hybird between lisp indent and c indent
-   local function hyindent(lnum)
-      local lispindent = vim.fn.lispindent(lnum + 1)
-      if lispindent == 0 then
-         return vim.fn.cindent(lnum + 1)
-      end
-      return lispindent
-   end
-   vim.keymap.set("i", ";", function()
-      local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
-      cursorRow = cursorRow - 1
-      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
-      local current = stri(line, cursorCol)
-      local next = stri(line, cursorCol + 1)
-      local prev = stri(line, cursorCol - 1)
-      if next == ';' or prev == ';' then
-         return
-      end
-      if semiOutPair[OPENING][current] then
-         if semiOutPair[CLOSING][next] then
-            api.nvim_buf_set_text(0, cursorRow, cursorCol + 2, cursorRow, cursorCol + 2, { ';' });
-            return
-         end
-      end
-      if semiOutPair[CLOSING][current] then
-         if semiOutPair[OPENING][prev] then
-            api.nvim_buf_set_text(0, cursorRow, cursorCol + 1, cursorRow, cursorCol + 1, { ';' });
-            return
-         end
-      end
-      api.nvim_buf_set_text(0, cursorRow, cursorCol, cursorRow, cursorCol, { ';' })
-      api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol + 1 })
-   end)
-   vim.keymap.set("n", ";", function()
-      local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0))
-      cursorRow = cursorRow - 1
-      local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
-      local finalChar = stri(line, #line - 1)
-      if finalChar ~= ";" then
-         line = strsub(line, 0, #line - 1) .. ';'
-         api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
-      end
-   end)
    local function distanceToNextWord(i, line)
       local distance = 1
       while distance < #line - i do
@@ -164,6 +95,7 @@ local function init()
       end
       return distance
    end
+
    local function saveUndo()
       local ctrlg = api.nvim_replace_termcodes("<C-g>", true, false, true)
       api.nvim_feedkeys(ctrlg .. "u", "n", false);
@@ -327,7 +259,12 @@ local function init()
                   vim.o.cindent = true
                end
                return
-               '<cr><cr><C-f><Up><C-f><c-g>u<cmd>lua vim.o.cindent = OLD_cindent vim.o.cinkeys = OLD_cinkeys vim.o.indentkeys = OLD_indentkeys<cr>'
+                   '<cr><cr><C-f><Up><C-f><c-g>u' ..
+                   -- restore the user's configuration
+                   '<cmd>lua ' ..
+                   'vim.o.cindent    = OLD_cindent ' ..
+                   'vim.o.cinkeys    = OLD_cinkeys ' ..
+                   'vim.o.indentkeys = OLD_indentkeys<cr>'
             end
          end
       end
@@ -339,9 +276,6 @@ end
 M.setup = function(config)
    if config.bracketList then
       bracketList = config.bracketList
-   end
-   if config.semiOutPair then
-      semiOutPair = config.semiOutPair
    end
    if config.wrapForwardKey then
       wrapForwardKey = config.wrapForwardKey

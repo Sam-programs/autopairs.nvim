@@ -23,16 +23,6 @@ require("autopairs").setup({
    wrapBackwradKey = '<C-a>',
    wordRegex = '%w',
    cmdline = true
-   semiOutPair = {
-      {
-         ['{'] = true,
-         ['('] = true,
-      },
-      {
-         [')'] = true,
-         ['}'] = true,
-      }
-   },
    bracketList = {
       { '{',  '}' },
       { '(',  ')' },
@@ -53,11 +43,6 @@ Delete pair
 ```
 {|} -> |
 ```
-Semicolon out of pair
-```
-{;} -> {};
-(;) -> ();
-```
 word wrap + inverse wrap
 ```
 <C-e>
@@ -69,13 +54,13 @@ word wrap + inverse wrap
 (|)foo.bar -> (|foo).bar
 
 ```
-Insert new indented line after Return (only for {})
+Insert new indented line after Return 
 ```
 {|} -> {
            |
        }
 ```
-Skip ' when inside a word
+Skip ' when the previous character is a letter
 
 Ignore auto pair when the previous character is \
 
@@ -90,3 +75,7 @@ vim.keymap.set("i", "<C-j>", "<down><end><cr>")
 }
 | and you go here
 ```
+
+the formmating for Return uses cindenting if indentexpr is empty
+which should be fine for most cases
+am not so sure about lisp but it seems fine to me (not a lisp expert)
