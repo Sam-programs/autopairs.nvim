@@ -21,6 +21,7 @@ this is the default setup
 require("autopairs").setup({
    wrapForwardKey = '<C-e>',
    wrapBackwradKey = '<C-a>',
+   wordRegex = '%w',
    cmdline = true
    semiOutPair = {
       {
@@ -59,13 +60,14 @@ Semicolon out of pair
 ```
 word wrap + inverse wrap
 ```
-|foo    -> (foo)
-|foo.bar -> (foo).bar
-
 <C-e>
+(|)foo.bar -> (|foo).bar
 (|foo).bar -> (|foo.bar)
+
 <C-a>
 (|foo.bar) -> (|foo).bar
+(|)foo.bar -> (|foo).bar
+
 ```
 Insert new indented line after Return (only for {})
 ```
@@ -77,11 +79,12 @@ Skip ' when inside a word
 
 Ignore auto pair when the previous character is \
 
-Works in the command line (note most features like word wrapping won't work in the command line)
+Very simple command line support
 
 i didn't make a jump out of pair function becaues this does the job for me
 ```lua
 vim.keymap.set("i", "<C-j>", "<down><end><cr>")
+
 {
      |   C-j here
 }

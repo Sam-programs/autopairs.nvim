@@ -90,6 +90,7 @@ local semiOutPair     = {
 local wrapForwardKey  = '<C-e>'
 local wrapBackwradKey = '<C-a>'
 local cmdline         = true
+local wordRegex = '%w'
 --plugin code
 
 
@@ -184,27 +185,27 @@ local function init()
       if next == ';' or prev == ';' then
          return
       end
-      if semiOutPair[OPENING][current] ~= nil then
+      if semiOutPair[OPENING][current] then
          if semiOutPair[CLOSING][next] then
             api.nvim_buf_set_text(0, cursorRow, cursorCol + 2, cursorRow, cursorCol + 2, { ';' });
             return
          end
       end
-      if semiOutPair[CLOSING][current] ~= nil then
+      if semiOutPair[CLOSING][current] then
          if semiOutPair[OPENING][prev] then
             api.nvim_buf_set_text(0, cursorRow, cursorCol + 1, cursorRow, cursorCol + 1, { ';' });
             return
          end
       end
-      api.nvim_buf_set_text(0, cursorRow, cursorCol, cursorRow, cursorCol, { ';' });
+      api.nvim_buf_set_text(0, cursorRow, cursorCol, cursorRow, cursorCol, { ';' })
       api.nvim_win_set_cursor(0, { cursorRow + 1, cursorCol + 1 })
    end)
    vim.keymap.set("n", ";", function()
-      local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0));
+      local cursorRow, cursorCol = unpack(api.nvim_win_get_cursor(0))
       cursorRow = cursorRow - 1
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
       local finalChar = stri(line, #line - 1)
-      if finalChar ~= ";"then
+      if finalChar ~= ";" then
          line = strsub(line, 0, #line - 1) .. ';'
          api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       end
@@ -212,7 +213,7 @@ local function init()
    local function distanceToNextWord(i, line)
       local distance = 1
       while distance < #line - i do
-         if letters[stri(line, i + distance)] == nil then
+         if string.gmatch(stri(line, i + distance),wordRegex)() == nil then
             distance = distance - 1
             break;
          end
@@ -222,9 +223,9 @@ local function init()
    end
 
    local function distanceToEndOfPrevWord(i, line)
-      local distance = 1
+      local distance = 0
       while distance < i do
-         if letters[stri(line, i - distance)] == nil then
+         if string.gmatch(stri(line, i - distance),wordRegex)() == nil then
             distance = distance + 1
             break;
          end
@@ -255,7 +256,7 @@ local function init()
       local dataAfterCursor      = strsub(line, cursorCol);
       local filteredOpenBrackets
       local filteredClosedBrackets
-      -- quotes don't need filtering
+      -- not willing to rewrite this :>
       if open ~= close then
          filteredOpenBrackets   = strcontains(dataBeforeCursor, open) -
              strcontains(dataBeforeCursor, close)
@@ -270,14 +271,10 @@ local function init()
          end
       end
       line = insertChar(line, cursorCol - 1, open);
-      --this might not be the best way to check if there are missing end brackets
-      --but its good enough
       if filteredClosedBrackets <= filteredOpenBrackets and
           prev ~= '\\'
       then
-         -- word wrapping
-         local distance = distanceToNextWord(cursorCol, line)
-         line = insertChar(line, cursorCol + distance, close);
+         line = insertChar(line, cursorCol, close);
       end
       api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       saveUndo()
@@ -351,7 +348,8 @@ local function init()
       r = r - 1;
       local line = api.nvim_buf_get_lines(0, r, r + 1, false)[1];
       local prev = stri(line, c - 1)
-      if letters[prev] or
+      -- weirdly gmatch accepts empty strings as words
+      if #prev ~= 0 and string.gmatch(prev,wordRegex) or
           prev == '\\'
       then
          api.nvim_feedkeys('\'', "n", false);
@@ -422,6 +420,9 @@ M.setup = function(config)
    end
    if config.cmdline then
       cmdline = config.cmdline
+   end
+   if config.wordRegex then
+      wordRegex = config.wordRegex
    end
    init()
 end
