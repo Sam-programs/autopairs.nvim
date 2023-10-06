@@ -204,7 +204,7 @@ local function init()
       cursorRow = cursorRow - 1
       local line = api.nvim_buf_get_lines(0, cursorRow, cursorRow + 1, false)[1]
       local finalChar = stri(line, #line - 1)
-      if semiOutPair[CLOSING][finalChar] then
+      if finalChar ~= ";"then
          line = strsub(line, 0, #line - 1) .. ';'
          api.nvim_buf_set_lines(0, cursorRow, cursorRow + 1, false, { line })
       end
