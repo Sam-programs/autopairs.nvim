@@ -238,6 +238,37 @@ local function init()
       return '<BS>';
    end, { expr = true, noremap = true })
 
+   local function formated_on_cr()
+      OLD_cinkeys = vim.o.cinkeys
+      OLD_indentkeys = vim.o.indentkeys
+      OLD_cindent = vim.o.cindent
+      OLD_indentexpr = vim.o.indentexpr
+      if vim.o.filetype == 'lisp' then
+         vim.cmd(
+            'if !exists("*GetLispIndent")\n' ..
+            'function GetLispIndent() \n' ..
+            'return lispindent(v:lnum) \n' ..
+            'endfunction\n' ..
+            'endif \n')
+         vim.o.indentexpr = 'GetLispIndent()'
+      end
+      if vim.o.indentexpr ~= '' then
+         vim.o.indentkeys = '!^F'
+      else
+         vim.o.cinkeys = '!^F'
+         vim.o.cindent = true
+      end
+      return
+          '<cr><cr><C-f><Up><C-f><c-g>u' ..
+          -- restore the user's configuration
+          '<cmd>lua ' ..
+          ' vim.o.cindent    = OLD_cindent' ..
+          ' vim.o.cinkeys    = OLD_cinkeys' ..
+          ' vim.o.indentkeys = OLD_indentkeys' ..
+          ' vim.o.indentexpr = OLD_indentexpr<cr>'
+   end
+
+
    --this works better than <ESC>O because it only draws the cursor once
    --it would have been easier to make this perfect make if i had learnt to not skim documentation
    vim.keymap.set("i", "<cr>", function()
@@ -249,33 +280,7 @@ local function init()
       for _, bracket in pairs(bracketList) do
          if prev == bracket[OPENING] then
             if cur == bracket[CLOSING] then
-               OLD_cinkeys = vim.o.cinkeys
-               OLD_indentkeys = vim.o.indentkeys
-               OLD_cindent = vim.o.cindent
-               OLD_indentexpr = vim.o.indentexpr
-               if vim.o.filetype == 'lisp' then
-                  vim.cmd(
-                     'if !exists("*GetLispIndent")\n' ..
-                     'function GetLispIndent() \n' ..
-                     'return lispindent(v:lnum) \n' ..
-                     'endfunction\n' ..
-                     'endif \n')
-                  vim.o.indentexpr = 'GetLispIndent()'
-               end
-               if vim.o.indentexpr ~= '' then
-                  vim.o.indentkeys = '!^F'
-               else
-                  vim.o.cinkeys = '!^F'
-                  vim.o.cindent = true
-               end
-               return
-                   '<cr><cr><C-f><Up><C-f><c-g>u' ..
-                   -- restore the user's configuration
-                   '<cmd>lua ' ..
-                   ' vim.o.cindent    = OLD_cindent' ..
-                   ' vim.o.cinkeys    = OLD_cinkeys' ..
-                   ' vim.o.indentkeys = OLD_indentkeys' ..
-                   ' vim.o.indentexpr = OLD_indentexpr<cr>'
+               return formated_on_cr()
             end
          end
       end
@@ -285,20 +290,22 @@ local function init()
 end
 
 M.setup = function(config)
-   if config.bracketList then
-      bracketList = config.bracketList
-   end
-   if config.wrapForwardKey then
-      wrapForwardKey = config.wrapForwardKey
-   end
-   if config.wrapBackwradKey then
-      wrapBackwradKey = config.wrapBackwradKey
-   end
-   if config.cmdline then
-      cmdline = config.cmdline
-   end
-   if config.wordRegex then
-      wordRegex = config.wordRegex
+   if config then
+      if config.bracketList then
+         bracketList = config.bracketList
+      end
+      if config.wrapForwardKey then
+         wrapForwardKey = config.wrapForwardKey
+      end
+      if config.wrapBackwradKey then
+         wrapBackwradKey = config.wrapBackwradKey
+      end
+      if config.cmdline then
+         cmdline = config.cmdline
+      end
+      if config.wordRegex then
+         wordRegex = config.wordRegex
+      end
    end
    init()
 end
