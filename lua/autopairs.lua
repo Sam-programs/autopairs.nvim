@@ -75,7 +75,7 @@ local function init()
    local function distanceToNextWord(i, line)
       local distance = 1
       while distance < #line - i do
-         if string.gmatch(stri(line, i + distance), wordRegex)() == nil then
+         if string.match(stri(line, i + distance), wordRegex)() == nil then
             distance = distance - 1
             break;
          end
@@ -87,7 +87,7 @@ local function init()
    local function distanceToEndOfPrevWord(i, line)
       local distance = 0
       while distance < i do
-         if string.gmatch(stri(line, i - distance), wordRegex)() == nil then
+         if string.match(stri(line, i - distance), wordRegex)() == nil then
             distance = distance + 1
             break;
          end
@@ -211,8 +211,7 @@ local function init()
       r = r - 1;
       local line = api.nvim_buf_get_lines(0, r, r + 1, false)[1];
       local prev = stri(line, c - 1)
-      -- weirdly gmatch accepts empty strings as words
-      if #prev ~= 0 and string.gmatch(prev, wordRegex) or
+      if prev and string.match(prev, wordRegex)() or
           prev == '\\'
       then
          api.nvim_feedkeys('\'', "n", false);
