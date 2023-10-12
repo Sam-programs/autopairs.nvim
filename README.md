@@ -77,5 +77,26 @@ vim.keymap.set("i", "<C-j>", "<down><end><cr>")
 ```
 
 the formmating for Return uses cindenting if indentexpr is empty
-which should be fine for most cases
-am not so sure about lisp but it seems fine to me (not a lisp expert)
+
+this plugin doesn't have  builtin cmp support because it's not that hard to impelement
+and i want you to create it your own customized autopairs for cmp
+```lua
+local kind = cmp.lsp.CompletionItemKind
+-- auto add pairs
+local function pair_on_confirm(event)
+   local entry = event.entry
+   local item = entry:get_completion_item()
+   local keys = "()"
+   local functionsig = item.label
+   if item.kind == kind.Function or item.kind == kind.Method then
+      -- auto skip empty functions
+      if functionsig:sub(#functionsig - 1,#functionsig) ~= '()' then
+         keys = keys .. '<left>'
+         keys = vim.api.nvim_replace_termcodes(keys, true, false, true)
+      end
+      vim.api.nvim_feedkeys(keys, "n", false)
+   end
+end
+cmp.event:on('confirm_done',pair_on_confirm) 
+```
+if u want to learn more about cmp read the types in its lua/cmp/types
