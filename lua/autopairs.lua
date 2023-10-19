@@ -151,6 +151,20 @@ local function init()
          vim.keymap.set("c", bracket[OPENING], function()
             return bracket[OPENING] .. bracket[CLOSING] .. '<left>'
          end, { expr = true, noremap = true })
+         vim.keymap.set("c", "<bs>", function()
+            local line = vim.fn.getcmdline()
+            local c = vim.fn.getcmdpos()
+            local prev = line:sub(c - 1, c - 1)
+            local cur = line:sub(c, c)
+            for _, cmd_bracket in pairs(bracketList) do
+               if prev == cmd_bracket[OPENING] then
+                  if cur == cmd_bracket[CLOSING] then
+                     return '<del><bs>'
+                  end
+               end
+            end
+            return '<bs>'
+         end, { expr = true, noremap = true })
       end
    end
 
