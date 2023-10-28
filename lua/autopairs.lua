@@ -272,7 +272,7 @@ local function init()
          vim.o.cindent = true
       end
       return
-          '<cr><cr><C-f><Up><C-f><c-g>u' ..
+          '<cr><cr><end><C-f><Up><C-f><c-g>u' ..
           -- restore the user's configuration
           '<cmd>lua ' ..
           ' vim.o.cindent    = OLD_cindent' ..
