@@ -304,19 +304,19 @@ end
 
 M.setup = function(config)
    if config then
-      if config.bracketList then
+      if config.bracketList ~= nil then
          bracketList = config.bracketList
       end
-      if config.wrapForwardKey then
+      if config.wrapForwardKey ~= nil then
          wrapForwardKey = config.wrapForwardKey
       end
-      if config.wrapBackwradKey then
+      if config.wrapBackwradKey ~= nil then
          wrapBackwradKey = config.wrapBackwradKey
       end
-      if config.cmdline then
+      if config.cmdline ~= nil then
          cmdline = config.cmdline
       end
-      if config.wordRegex then
+      if config.wordRegex ~= nil then
          wordRegex = config.wordRegex
       end
    end
